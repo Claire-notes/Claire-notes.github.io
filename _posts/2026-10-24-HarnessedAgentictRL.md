@@ -6,21 +6,20 @@ title: Harnessed Agentic RL (01)
 ###### 简单聊聊 Harnessed Agentic RL（简称HAR） 
 ​
 ###### Harnessed Agentic RL产生的背景 
-背景：Agent = 大语言模型（LLM） + 运行框架（Harness）。
-现在的Agent是运行在Harness框架内的模型(LLM/Agent)，不再是一个单独模型(LLM/Agent)与环境交互。Harness负责决策模型如何思考规划、多轮调用工具和行动、感知和管理上下文、多智能体协同、存储和评估结果，Harness已经是Agent的核心组件。
+背景：Agent = 大语言模型（LLM） + 运行框架（Harness）。Agent 的演进与 Harness 的崛起。
+现在的Agent是运行在Harness框架内的(LLM/Agent)复合系统，不再是一个单体模型(LLM/Agent)与环境直接交互。Harness负责决策模型如何思考规划、多轮调用工具和行动、感知和管理上下文、多智能体协同及结果存储和评估，Harness已经是Agent的核心组件。
 
-2023-2025：早期的Agent-RL是在训练引擎中实现AgentLoop交互循环(AgentLoop直接写入GPU Cluster)，与环境交互是原生Token-in/Token-out API结构，所以在整个执行过程中每个rollout样本保持着在时间上连续的Token序列流，不存在Decode-encode drift问题。  
+2023-2025：早期的Agent-RL，是在训练引擎中直接实现AgentLoop交互循环(直接写入GPU Cluster)，模型与环境交互是原生Token-in/Token-out API结构，所以在整个执行过程中每个rollout样本保持着在时间上连续的Token序列流，天然不存在Decode-encode drift问题，保证了强化学习在完全的 On-policy 状态下高效收敛。  
 
-2025-至今：Harnessed Agentic RL由于harness在控制工具调用、上下文拼接、流程流转与多智能体协同，一次任务可能会被拆分成动态次数的模型请求，harness管理请求间的状态信息传递和重试，与环境交互主要采用Message API/Response API，随之产生Decode-encode drift问题导致RL训练off-policy。  
+2025-至今：Harnessed Agentic RL，由于harness控制工具调用、上下文拼接、流程流转与多智能体协同，一次任务可能会被拆分成动态次数的模型请求，harness内部管理请求间的状态信息传递和重试，与环境交互主要采用Message API/Response API，随之产生Decode-encode drift问题导致RL训练陷入非真实环境off-policy。  
   
 同时Harness 越做越复杂——工具链、上下文管理、子agent 调度、失败重试、沙箱隔离，每个harness背后是一套完整的工程系统。想要把整套 harness 逻辑​​重写进训练框架​​，已经不太可能。  
-  
-*Decode-encode drift：decode后再encode和原来token序列不同；导致模型训练看到的token序列与此前推理时token序列不同，模型在学习一个非真实的输入（off-policy）*    
-  
-因此Harnessed Agentic RL与早期Agent RL有着本质区别，系统设计上也面临不同挑战。  
-为什么需要转变到Harnessed Agentic RL：  
-1. ​​Harness复杂度​​越来越高，重写入训练引擎成本已经不可接受。
-2. 训练-部署一致性​​：在训练harness上学到的策略，在部署harness下可能完全失效。
+
+> *Decode-encode drift：decode后再encode和原来token序列不同；导致模型训练看到的token序列与此前推理时token序列不同，模型在学习一个非真实的输入（off-policy），破坏算法收敛性*    
+
+为什么转变到Harnessed Agentic RL：  
+1. ​​Harness复杂度​​越来越高，重写入训练引擎成本已经不可接受：想要把庞大的Harness逻辑在训练框架（如 Megatron-LM 或 FSDP）内部用 PyTorch 重写，边际成本与维护代价极高，在工程上基本不可行。
+2. 训练-部署一致性（Training-Deployment Consistency）​​：强行在训练框架内生构一套简化的 Harness 进行交互训练，会导致在训练harness上学到的策略，在部署harness下可能完全失效。
 
 ###### Agentic RL训练范式
 训练框架直接持有LLM/Agent运行时状态，需要把Agent的执行过程（rollout）与环境交互循环逻辑写进训练框架(GPU Cluster)，让训练器拿到模型每次生成的（tokenization、轨迹记录、loss mask 构建）。  
@@ -53,10 +52,10 @@ veRL AgentLoop架构 ：用户实现Agent逻辑，训练和Agent是耦合在一�
 
 ​
 ###### Harnessed Agentic RL训练系统范式
-Harnessed Agentic RL​​范式：让部署时的harness直接参与RL-training，训练引擎不持有Harness Agent的运行时状态，只通过API-Proxy记录LLM请求-响应轨迹，使得训练和部署的Harness保持同一。在几乎不修改Agent源码的前提下，可以将不同Harness无缝接入强化学习训练。
-基于代理（Proxy-based）的黑盒交互范式已在verl Uni-Agent、AReaL 2.0、slime v0.3.0 逐步采用，虽然整体还在初期仍不完整成熟，但是这种原生实现Harnessed Agentic RL大概率是未来主流范式。
-从"训练框架拥有环境交互循环"—>"harness 拥有环境交互循环，训练框架只观察请求-响应对"​​。
-Polar 解决了"怎么观察"的问题，但没有处理后续的训练挑战——样本合并、优势计算、损失归一化、后端调度。
+Harnessed Agentic RL​​范式：基于LLM-Proxy-based的黑盒交互范式让部署时的harness直接参与RL-training，训练引擎不再重写Harness，只通过API-Proxy记录LLM请求-响应轨迹，使得训练和部署的Harness保持同一。在几乎不修改Agent源码的前提下，可以将不同Harness无缝接入强化学习训练。
+这种范式已在verl Uni-Agent、AReaL 2.0、slime v0.3.0 逐步落地，虽然整体还在初期仍不成熟，但是这种原生实现Harnessed Agentic RL大概率是未来主流范式。
+意味着Agentic RL训练从"训练框架拥有环境交互循环"—>"harness 拥有环境交互循环，训练框架只观察LLM请求-响应对"​​。
+
 ​​
 ###### Pattern1: 🔹 Polar￼ （NVIDIA，2026.05）
 ![这是图片](/images/2026-10-25-HarnessedAgenticRL/polar.jpeg "Polar Framework")
@@ -72,6 +71,7 @@ Polar 解决了"怎么观察"的问题，但没有处理后续的训练挑战—
 负责启动和管理 Agent 执行。支持两种运行方式：​​本地进程​​ 和 ​​Kubernetes 任务​​。原生支持 K8s 意味着不需要依赖 Modal、E2B 等商业沙盒服务，可以直接用自建集群做大规模 rollout。
 3. Customized Trainer
 负责收集日志、根据前述规则构建训练样本、计算优势值和 loss、执行策略更新。更新时会暂停 API 请求，降低策略陈旧问题。
+Polar 解决了"怎么观察"的问题，但没有处理后续的训练挑战——样本合并、优势计算、损失归一化、后端调度。
 
 ###### Pattern2: 🔹 Agent LightningV1.0（微软，2026.08）
 ![这是图片](/images/2026-10-25-HarnessedAgenticRL/agentlightning.jpeg "Polar Framework")
