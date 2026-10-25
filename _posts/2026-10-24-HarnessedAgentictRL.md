@@ -11,8 +11,9 @@ title: Harnessed Agentic RL (01)
 
 2023-2025：早期的Agent-RL是在训练引擎中实现AgentLoop交互循环(AgentLoop直接写入GPU Cluster)，与环境交互是原生Token-in/Token-out API结构，所以在整个执行过程中每个rollout样本保持着在时间上连续的Token序列流，不存在Decode-encode drift问题。  
 
-2025-至今：Harnessed Agentic RL由于harness在控制工具调用、上下文拼接、流程流转与多智能体协同，一次任务可能会被拆分成动态次数的模型请求，harness管理请求间的状态信息传递和重试，与环境交互主要采用Message API/Response API，随之产生Decode-encode drift问题导致RL训练off-policy。同时Harness 越做越复杂——工具链、上下文管理、子agent 调度、失败重试、沙箱隔离，每个harness背后是一套完整的工程系统。想要把整套 harness 逻辑​​重写进训练框架​​，已经不太可能。
-*Decode-encode drift：decode后再encode和原来token序列不同；导致模型训练看到的token序列与此前推理时token序列不同，模型在学习一个非真实的输入（off-policy）*  
+2025-至今：Harnessed Agentic RL由于harness在控制工具调用、上下文拼接、流程流转与多智能体协同，一次任务可能会被拆分成动态次数的模型请求，harness管理请求间的状态信息传递和重试，与环境交互主要采用Message API/Response API，随之产生Decode-encode drift问题导致RL训练off-policy。  
+同时Harness 越做越复杂——工具链、上下文管理、子agent 调度、失败重试、沙箱隔离，每个harness背后是一套完整的工程系统。想要把整套 harness 逻辑​​重写进训练框架​​，已经不太可能。  
+*Decode-encode drift：decode后再encode和原来token序列不同；导致模型训练看到的token序列与此前推理时token序列不同，模型在学习一个非真实的输入（off-policy）*    
 因此Harnessed Agentic RL与早期Agent RL有着本质区别，系统设计上也面临不同挑战。  
 为什么需要转变到Harnessed Agentic RL：  
 1. ​​Harness复杂度​​越来越高，重写入训练引擎成本已经不可接受。
@@ -24,9 +25,10 @@ title: Harnessed Agentic RL (01)
 🔹 veRL￼
 - ​​核心设计​​：原生支持协程式 Agent（白盒），框架直接持有运行时状态。在面对黑盒 Agent 时（外部 CLI 子进程、远程 HTTP 服务），需要走完全不同的集成路径。
 - ​​定位​​：白盒是 veRL 的原生模式，黑盒适配需要额外工作。
-🔹 SLIME v3.0￼
+- 🔹 SLIME v3.0￼
 - ​​核心设计​​：白盒路线的另一套实现，训练引擎直接管理 rollout 和环境交互。
 - ​​局限​​：和前两者相同。
+
 🔹 aReal
 
 🔹 Molt￼ （NVIDIA NeMo，2026.07）
