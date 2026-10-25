@@ -7,9 +7,10 @@ title: Harnessed Agentic RL (01)
 
 ###### Harnessed Agentic RL产生的背景 
 Agent = 大语言模型（LLM） + 运行框架（Harness）。
-现在Agent不再是一个独立的大模型交互，而是运行在Harness框架内部，该框架负责管理长周期上下文、多轮工具调用、上下文工程以及多智能体协同，Harness已经是智能体不可或缺的核心组件。
-过去的Agent RL是训练引擎中实现了Agent loop交互循环(Agent-loop直接写入GPU Cluster)，是原生的 Token-in/Token-out API 结构，所以在整个执行过程中每个rollout样本保持着时间连续的Token序列流，不存在Decode-encode drift问题。
-想比与传统Agent RL，Harness Agent，由于harness控制工具调用、上下文拼接和流程控制，一次任务会拆分成动态次数的模型请求，harness管理这些请求之间的状态传递和重试采用的多是Completation API（也就是Message API/Response API），Decode-encode drift会直接导致Token连续序列流天然中断。这些会带来Harnessed Agentic RL与传统的Agent RL有本质区别。
+现在的Agent不再是一个单的大模型(Agent)交互，而是运行在Harness框架内的大模型(Agent)，Harness负责管理长周期上下文、多轮工具调用、上下文工程以及多智能体协同，Harness已经是Agent的核心组件。  
+过去的Agent-RL是在训练引擎中实现AgentLoop交互循环(AgentLoop直接写入GPU Cluster)，是原生Token-in/Token-out API结构，所以在整个执行过程中每个rollout样本保持着在时间上连续的Token序列流，不存在Decode-encode drift问题。  
+相比与传统Agent RL，Harness Agent RL由于harness在控制工具调用、上下文拼接和流程流转，一次任务可能会被拆分成动态次的模型请求，harness管理请求间的状态传递和重试，Harness与环境交互主要采用Message API/Response API，Decode-encode drift问题会直接带来Token连续序列流中断。  
+因此Harnessed Agentic RL与传统Agent RL有本质区别，也面临不同问题挑战。
 
 传统的Agentic RL训练范式是：把Agent的执行过程（rollout）接入训练是依赖把整个环境交互循环逻辑写进训练框架(GPU Cluster)，让训练器拿到模型每次生成的token序列，这本质是训练和部署是两套分别的‘harness’。这种训练范式带来三个问题：
 1. ​​训练-部署不一致​​：训练时看到的 prompt 和部署时模型实际看到的 prompt 可能不同。
