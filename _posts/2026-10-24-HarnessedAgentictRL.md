@@ -3,35 +3,78 @@ layout: post
 title: Harnessed Agentic RL (01)
 ---
 
-###### 今天聊一聊 Harnessed Agentic RL（简称HAR）  
+###### 今天聊一聊 Harnessed Agentic RL（简称HAR） 
+
+🔙 第一阶段：白盒 RL 的局限性（2023-2025）
+最早的 Agentic RL 框架（ OpenAgents￼ 、 APOLLO￼ 、 SLIME￼ ）走的是​​白盒路线​​：训练框架直接持有任何 Agent 的运行时状态，在每一步精准插入训练逻辑。
+这种方式对算法研究者很友好，但有一个致命问题：​​训练时和部署时用的是两套不同的 harness​​。
+🔀 第二阶段：
+🔄 第三阶段：黑盒解耦思路的出现（2025 末 - 2026 初）
+既然 harness 没法重写，那就​​不重写​​。
+Polar￼ （NVIDIA，2026.05）第一个把这套思路做成了系统：在模型 API 端点处架一个代理，harness 该怎么跑还怎么跑，代理在后台静默记录原始 token 和 logprob，绕开重写 harness 的问题。
+这标志着范式翻转：​​从"训练框架拥有环境交互循环"变成"harness 拥有环境交互循环，训练框架只观察请求-响应对"​​。
+🚀 第四阶段：Harnessed Agentic RL 正式定义（2026.08）
+Agent Lightning￼ v1.0（微软，2026.08）在 Polar 的基础上做了一次系统性的补全。
+Polar 解决了"怎么观察"的问题，但没有处理后续的训练挑战——样本合并、优势计算、损失归一化、后端调度。Agent Lightning 把这组问题逐一拆解，正式定义了 ​​Harnessed Agentic RL​​ 这一范式。
+🎯 总结：为什么需要 Harnessed Agentic RL
+一句话：​​因为真实世界的 Agent 都有自己成熟的 harness，让研究者把这些 harness 重写一遍既不现实也不合理。​​
+背后的驱动力是三条线的交汇：
+1. ​​Harness 复杂度​​越来越高，重写成本不可接受。
+2. ​​训练-部署一致性​​被证明是关键——在训练 harness 上学到的策略，在部署 harness 下可能完全失效。
+3. ​​黑盒观察技术​​成熟了——在 API 边界处记录原始 token 成为可行方案。
+Harnessed Agentic RL 的核心价值就在于：让部署时用什么 harness，训练时就直接让这个 harness 参与，不再需要两套系统。
+
 
 ###### Harnessed Agentic RL产生的背景 
-Agent = 大语言模型（LLM） + 运行框架（Harness）。
+背景：Agent = 大语言模型（LLM） + 运行框架（Harness）。
 现在的Agent是运行在Harness框架内的模型(LLM/Agent)，不再是一个单独模型(LLM/Agent)与环境交互。Harness负责决策模型如何思考规划、多轮调用工具和行动、感知和管理上下文、多智能体协同、存储和评估结果，Harness已经是Agent的核心组件。
 
-过去的Agent-RL是在训练引擎中实现AgentLoop交互循环(AgentLoop直接写入GPU Cluster)，与环境交互是原生Token-in/Token-out API结构，所以在整个执行过程中每个rollout样本保持着在时间上连续的Token序列流，不存在Decode-encode drift问题。  
+2023-2025：早期的Agent-RL是在训练引擎中实现AgentLoop交互循环(AgentLoop直接写入GPU Cluster)，与环境交互是原生Token-in/Token-out API结构，所以在整个执行过程中每个rollout样本保持着在时间上连续的Token序列流，不存在Decode-encode drift问题。  
 
-而Harness Agent RL由于harness在控制工具调用、上下文拼接、流程流转与多智能体协同，一次任务可能会被拆分成动态次数的模型请求，harness管理请求间的状态信息传递和重试，与环境交互主要采用Message API/Response API，随之产生Decode-encode drift问题导致RL训练off-policy。
+2025-至今：Harnessed Agentic RL由于harness在控制工具调用、上下文拼接、流程流转与多智能体协同，一次任务可能会被拆分成动态次数的模型请求，harness管理请求间的状态信息传递和重试，与环境交互主要采用Message API/Response API，随之产生Decode-encode drift问题导致RL训练off-policy。同时Harness 越做越复杂——工具链、上下文管理、子agent 调度、失败重试、沙箱隔离，每个harness背后是一套完整的工程系统。想要把整套 harness 逻辑​​重写进训练框架​​，已经不太可能。
 *Decode-encode drift：decode后再encode和原来token序列不同；导致模型训练看到的token序列与此前推理时token序列不同，模型在学习一个非真实的输入（off-policy）*
-因此Harnessed Agentic RL与传统Agent RL有着本质区别，算法系统设计上面临不同挑战。  
+因此Harnessed Agentic RL与早期Agent RL有着本质区别，系统设计上也面临不同挑战。  
 
+###### 传统Agentic RL训练系统范式
+训练框架直接持有LLM/Agent运行时状态，依赖把Agent的执行过程（rollout）与环境交互循环逻辑写进训练框架(GPU Cluster)，让训练器拿到模型每次生成的（tokenization、轨迹记录、loss mask 构建），本质问题：训练和部署时用的是两套不同的‘harness’。
+🔹 OpenAgents￼
+- ​​核心设计​​：训练框架原生拥有环境交互循环，Agent 的每一步推理、工具调用、状态转移都由训练框架直接管理。
+- ​​优点​​：对 RL 算法研究者最友好，训练动态完全可控，token 级信号精准。
+- ​​缺点​​：每换一个 harness 就要重写一遍训练逻辑，工程成本极高；训练时和部署时的 harness 不一致，存在 sim-to-real gap。
+🔹 APOLLO 2.0￼
+- ​​核心设计​​：和 OpenAgents 类似，把 Agent 重新实现到训练框架中。
+- ​​局限​​：同样的问题——harness 不可复用，训练-部署不一致。
+🔹 SLIME v3.0￼
+- ​​核心设计​​：白盒路线的另一套实现，训练引擎直接管理 rollout 和环境交互。
+- ​​局限​​：和前两者相同。
+🔹 veRL￼
+- ​​核心设计​​：原生支持协程式 Agent（白盒），框架直接持有运行时状态。在面对黑盒 Agent 时（外部 CLI 子进程、远程 HTTP 服务），需要走完全不同的集成路径。
+- ​​定位​​：白盒是 veRL 的原生模式，黑盒适配需要额外工作。
+🔹 Molt￼ （NVIDIA NeMo，2026.07）
+- ​​核心设计​​：PyTorch 原生框架，约 8.6K 行代码，强调紧凑可追溯。单一异步环训练多模态和 MoE 策略。
+- ​​定位​​：白盒路线，面向算法研究者频繁改动的需求，强调"整个代码库能装进脑子"。
+veRL AgentLoop架构 ：用户实现Agent逻辑，训练和Agent是耦合在一起的，训练需要写一套，推理也需要写一套。
 
-###### 传统的Agentic RL训练系统范式
-
-把Agent的执行过程（rollout）接入训练是依赖把整个环境交互循环逻辑写进训练框架(GPU Cluster)，让训练器拿到模型每次生成的token序列，这本质是训练和部署是两套分别的‘harness’。这种训练范式带来三个问题：  
+这种训练范式带来三个问题：  
 1. ​​训练-部署不一致​​：训练时看到的 prompt 和部署时模型实际看到的 prompt 可能不同。
 2. ​​训练框架维护成本高​​：更换不同harness或harness更新 就要重写RL训练逻辑框架(训练代码、适配API格式、处理KVcache、对齐token序列)。
 3. 训练数据无法重复利用：原Harness累积的训练数据无法复用，数据资源和GPU资源大量浪费。
-  
-除这三个现存重点问题外，Harness agent基于传统Agent RL训练范式也是行不通的：  
-4.Harness框架已经庞大复杂到无法写入GPU Clauster（Claud code，codex，Qwen Code，DSH等）。  
-5.就算Harness能够写入GPUClauster，Decode-encode drif导致的token流断裂和样本动态性会带来RL训练的极不稳定甚至失效。 
+除这三个现存问题外，Harnessed agent RL基于这种范式也是行不通的：  
+原因1.Harness框架已经庞大复杂到无法写入GPU Clauster（Claud code，codex，Qwen Code，DSH等）。  
+原因2.就算Harness能够写入GPUClauster，Decode-encode drif导致的token流断裂和样本动态性会带来RL训练的不稳定或失效。 
 
-​​Harnessed Agentic RL​​范式：Training/Execution解耦架构，让部署时的harness直接参与RL-training。  
-Harness作为黑盒负责环境交互，同时通过LLM-API-proxy（LLM-Endpoint-Proxy）和推理引擎交互；训练引擎同样LLM-API-Proxy 观察请求-响应轨迹​​。这样harness 不需要写入GPUClauster，使得训练和部署保持一致。在几乎不修改Agent源码的前提下，可以将不同Harness无缝接入强化学习训练。基于代理（Proxy-based）的黑盒交互范式已在verl Uni-Agent、AReaL 2.0、slime v0.3.0 和 Polar 逐步采用，虽然整体还在初期仍不完整成熟，但是这种原生实现Harnessed Agentic RL大概率是未来的主流范式。
-
+​
 ###### Harnessed Agentic RL训练系统范式
-###### Pattern1: Polar
+Harnessed Agentic RL​​范式：让部署时的harness直接参与RL-training，训练引擎不持有Harness Agent的运行时状态，只通过API-Proxy记录LLM请求-响应轨迹，使得训练和部署的Harness保持同一。在几乎不修改Agent源码的前提下，可以将不同Harness无缝接入强化学习训练。
+基于代理（Proxy-based）的黑盒交互范式已在verl Uni-Agent、AReaL 2.0、slime v0.3.0 逐步采用，虽然整体还在初期仍不完整成熟，但是这种原生实现Harnessed Agentic RL大概率是未来主流范式。
+​​
+###### Pattern1: 🔹 Polar￼ （NVIDIA，2026.05）
+黑盒路线的开创性工作。
+- ​​核心设计​​：在模型 API 端点处放置 Agent Proxy，直接记录推理服务器返回的原始 token IDs 和 logprob，不做 decode-encode。支持两种轨迹构建方式：per_request 和 prefix merging￼ （约 5.4 倍加速）。
+- ​​Rollout 架构​​：Rollout Server 负责异步调度，Gateway Node 负责实际执行和工具调用。
+- ​​算法​​：使用 GRPO￼ ，不需要 critic 网络。
+- ​​效果​​：Qwen3.5-4B + Codex harness，SWE-bench 从 3.8% 提升到 26.4%；Qwen3.5-4B + Claude Code￼ ，从 29.8% 提升到 34.6%。
+- ​​局限​​：解决了"怎么观察"的问题，但没有系统处理样本合并、优势计算、损失归一化等后续训练挑战。
 1. LLM-API-Gateway
 提供兼容 OpenAI 的 LLM 代理接口。Harness 的每次模型调用都会自动关联到对应的 rollout，记录 prompt token IDs、response token IDs 和 nodeprob。Gateway 不参与梯度计算，只做观测和记录。
 2. Rollout Controller
@@ -39,35 +82,30 @@ Harness作为黑盒负责环境交互，同时通过LLM-API-proxy（LLM-Endpoint
 3. Customized Trainer
 负责收集日志、根据前述规则构建训练样本、计算优势值和 loss、执行策略更新。更新时会暂停 API 请求，降低策略陈旧问题。
 
-###### Pattern2: AgentlightningV1.0
+###### Pattern2: 🔹 Agent LightningV1.0（微软，2026.08）
 ![这是图片](/images/my-logo.png "Magic Gardens")
 
-###### Pattern3: QwenCode？DeepSeekHarness
+在黑盒路线上做了一次系统性的补全。
+- ​​核心设计​​：同样通过 API Gateway 中的 LLM Proxy 拦截请求，但和 Polar 不同，Agent Lightning 在 Gateway 层主动做 retokenization 对齐（统一 chat template），并系统研究了 retokenization shift 的三个来源。
+- ​​新增组件​​：Rollout Controller（支持本地进程和 K8s Job，不依赖商业沙盒）+ Customized Trainer（处理样本合并、rollout-level advantage、损失归一化）。
+- ​​效果​​：Qwen3.5-9B，仅 6K 样本，SWE-bench Verified 从 41.8% 提升到 56.4%。
+- ​​和黑盒的关系​​：Harness 完全不变，训练引擎只观察 request-response 对，是纯黑盒范式。但比 Polar 更系统地处理了后续训练挑战。
+
+###### Pattern3: 🔹 OpenForge￼（微软 / 哥伦比亚，2026.07）
+Forge: Scalable Agent RL Framework and Algorithm，trainer、rollout、agent均是分离的结构，其优势就是可以训练黑盒 + 白盒的agent，理论上可以训练任何agent。
+
+- ​​核心设计​​：轻量代理拦截 harness 的 LLM 调用，路由到 RL 推理引擎并录成训练轨迹。K8s 编排器管理沙箱 Pod 生命周期。
+- ​​特点​​：接新 harness / 新环境只需要改沙箱，即插即用对接 veRL￼ 。
+- ​​定位​​：和 Polar、Agent Lightning 类似，都是黑盒路线，强调"不换 harness 就能训"。
 
 
-###### Harnessed Agentic RL Optimization
-在三个场景上做了验证：
-1. 通用指令遵循 Agent
-在 HotpotQA 上，Llama-3.2-3B 的验证奖励从 25.1 提升到 41.7。
-2. 搜索 Agent
-在 Qwen3-4B 上，指令任务从 51.9 提升到 70.2。
-3. Coding Agent（重点实验）
-基于 Qwen3.5-9B，约 6K 训练样本，400 条测试隔离了 Git 和外网以防奖励投机。关键消融实验对比了三种设置：
-- rollout-level advantage + 归一化：第 128 步达到 38.2
-- 样本级 advantage：35.0
-- 只改 advantage 不归一化：33.1
-最终在 SWE-bench Verified 上，第 208 步 Pass@1 从 41.8% 提升到 ​​56.4%​​，绝对提升 14.6 个百分点。
+###### Harnessed Agentic RL vs Agentic RL
+Harnessed Agentic RL的核心优势是​harness不变、训练和部署一致​​，代价是 token 级信号需要通过各种手段还原，存在 retokenization 等问题。白盒路线的核心优势是 ​训练动态完全可控​​，代价是每换一个 harness 就要重写一遍，且训练-部署不一致，部分Harness较难在训练引擎中实现。
+从趋势上看，2026 年的工作明显在向Harnessed Agentic RL倾斜——Polar、Agent Lightning、OpenForge 都是这个方向。背后的逻辑很直接：真实世界的 Agent 都有自己成熟的 harness（Claude Code、Cursor、内部自建的），让研究者把这些 harness 重写一遍既不现实也不合理。
 
-🔍 Discussion（讨论）
-论文最后讨论了 Harnessed Agentic RL 的局限：
-- 训练引擎只能看到离散的 LLM 调用，harness 内部状态和工具副作用可能难以完整还原。
-- 错误的样本拼接或优势归因会让训练不稳定。
-- 跨 harness 迁移仍需更多验证。
-- 重试去重、外网隔离和奖励投机的防护还需要持续完善。
-- 结果尚未覆盖所有超长 Agent 场景。
-整体来说，论文的贡献在于把"用什么 harness 运行"从部署细节提升为训练变量，并提供了一个可复现的测试平台来系统研究这些问题。
 
 ###### Case Study
+
 
 ###### Agentic-RL框架 VS Harnessed-Agentic-RL框架
 在真实长程任务中，Agent 仍然容易出错，尤其是在超长程，多轮交互、或不熟悉的工具场景下。Agent 已经够强，但还不够可靠，需要 RL-training 来进一步提升。
@@ -107,8 +145,7 @@ Harnessed Agentic RL 不是简单地把 proxy 插上就能用，它有全新的�
 整个 Introduction 的逻辑非常紧凑，每一步都在为下一步做铺垫，没有多余的背景堆砌。
 
 
-###### Future Challenges 
-Challenges（挑战）
+###### Challenges 
 1. Retokenization
 训练引擎拿到的请求-响应对，如果要拼成连续的训练轨迹，需要把文本 decode 再 re-encode 成 token IDs。但 harness 和训练引擎的 tokenizer、chat template 可能不一致，导致 token 级别的前缀对不上，模型学到的是它从未见过的 prompt。
 论文分析了 retokenization shift 的三个来源：tokenizer 差异、chat template 差异、inference engine 的后处理。其中 ​​只有 chat template 不一致是可以解决的​​（通过统一 template），其他两种 shift 无法完全消除。
@@ -120,6 +157,15 @@ Challenges（挑战）
 类似地，如果直接按样本数量平均 loss，产生更多样本的 rollout 会获得更大的优化权重。损失归一化也需要避免被样本数量扭曲，同样以 rollout 为统计单位。
 5. Training Backend Scheduling（训练后端调度）
 每个 rollout 产生多少样本、每个样本多长，只有 harness 执行完才能确定，但 GPU 数量和并行配置是固定的。后端需要动态地把可变长度、可变数量的样本映射到固定的训练资源上。
+
+🔍 Discussion（讨论）
+论文最后讨论了 Harnessed Agentic RL 的局限：
+- 训练引擎只能看到离散的 LLM 调用，harness 内部状态和工具副作用可能难以完整还原。
+- 错误的样本拼接或优势归因会让训练不稳定。
+- 跨 harness 迁移仍需更多验证。
+- 重试去重、外网隔离和奖励投机的防护还需要持续完善。
+- 结果尚未覆盖所有超长 Agent 场景。
+整体来说，论文的贡献在于把"用什么 harness 运行"从部署细节提升为训练变量，并提供了一个可复现的测试平台来系统研究这些问题。
 
 ###### Citation
 Please cite this work as:
