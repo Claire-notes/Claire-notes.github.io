@@ -40,6 +40,7 @@ Harness作为黑盒负责环境交互，同时通过LLM-API-proxy（LLM-Endpoint
 负责收集日志、根据前述规则构建训练样本、计算优势值和 loss、执行策略更新。更新时会暂停 API 请求，降低策略陈旧问题。
 
 ###### Pattern2: AgentlightningV1.0
+![这是图片](/images/my-logo.png "Magic Gardens")
 
 ###### Pattern3: QwenCode？DeepSeekHarness
 
