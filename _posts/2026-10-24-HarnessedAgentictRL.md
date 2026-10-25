@@ -7,14 +7,18 @@ title: Harnessed Agentic RL (01)
 
 ###### Harnessed Agentic RL产生的背景 
 Agent = 大语言模型（LLM） + 运行框架（Harness）。
-现在的Agent不再是一个单的大模型(Agent)交互，而是运行在Harness框架内的大模型(Agent)，Harness负责管理长周期上下文、多轮工具调用、上下文工程以及多智能体协同，Harness已经是Agent的核心组件。  
+现在的Agent是运行在Harness框架内的模型(LLM/Agent)，不再是一个单独模型(LLM/Agent)与环境交互。Harness负责决策模型如何思考规划、多轮调用工具和行动、感知和管理上下文、多智能体协同、存储和评估结果，Harness已经是Agent的核心组件。
 
-过去的Agent-RL是在训练引擎中实现AgentLoop交互循环(AgentLoop直接写入GPU Cluster)，是原生Token-in/Token-out API结构，所以在整个执行过程中每个rollout样本保持着在时间上连续的Token序列流，不存在Decode-encode drift问题。  
+过去的Agent-RL是在训练引擎中实现AgentLoop交互循环(AgentLoop直接写入GPU Cluster)，与环境交互是原生Token-in/Token-out API结构，所以在整个执行过程中每个rollout样本保持着在时间上连续的Token序列流，不存在Decode-encode drift问题。  
 
-相比与传统Agent RL，Harness Agent RL由于harness在控制工具调用、上下文拼接和流程流转，一次任务可能会被拆分成动态次的模型请求，harness管理请求间的状态传递和重试，Harness与环境交互主要采用Message API/Response API，Decode-encode drift问题会直接带来Token连续序列流中断。  
-因此Harnessed Agentic RL与传统Agent RL有本质区别，也面临不同问题挑战。  
+而Harness Agent RL由于harness在控制工具调用、上下文拼接、流程流转与多智能体协同，一次任务可能会被拆分成动态次数的模型请求，harness管理请求间的状态信息传递和重试，与环境交互主要采用Message API/Response API，随之产生Decode-encode drift问题导致RL训练off-policy。
+*Decode-encode drift：decode后再encode和原来token序列不同；导致模型训练看到的token序列与此前推理时token序列不同，模型在学习一个非真实的输入（off-policy）*
+因此Harnessed Agentic RL与传统Agent RL有着本质区别，算法系统设计上面临不同挑战。  
 
-传统的Agentic RL训练范式是：把Agent的执行过程（rollout）接入训练是依赖把整个环境交互循环逻辑写进训练框架(GPU Cluster)，让训练器拿到模型每次生成的token序列，这本质是训练和部署是两套分别的‘harness’。这种训练范式带来三个问题：  
+
+###### 传统的Agentic RL训练系统范式
+
+把Agent的执行过程（rollout）接入训练是依赖把整个环境交互循环逻辑写进训练框架(GPU Cluster)，让训练器拿到模型每次生成的token序列，这本质是训练和部署是两套分别的‘harness’。这种训练范式带来三个问题：  
 1. ​​训练-部署不一致​​：训练时看到的 prompt 和部署时模型实际看到的 prompt 可能不同。
 2. ​​训练框架维护成本高​​：更换不同harness或harness更新 就要重写RL训练逻辑框架(训练代码、适配API格式、处理KVcache、对齐token序列)。
 3. 训练数据无法重复利用：原Harness累积的训练数据无法复用，数据资源和GPU资源大量浪费。
@@ -26,9 +30,8 @@ Agent = 大语言模型（LLM） + 运行框架（Harness）。
 ​​Harnessed Agentic RL​​范式：Training/Execution解耦架构，让部署时的harness直接参与RL-training。  
 Harness作为黑盒负责环境交互，同时通过LLM-API-proxy（LLM-Endpoint-Proxy）和推理引擎交互；训练引擎同样LLM-API-Proxy 观察请求-响应轨迹​​。这样harness 不需要写入GPUClauster，使得训练和部署保持一致。在几乎不修改Agent源码的前提下，可以将不同Harness无缝接入强化学习训练。基于代理（Proxy-based）的黑盒交互范式已在verl Uni-Agent、AReaL 2.0、slime v0.3.0 和 Polar 逐步采用，虽然整体还在初期仍不完整成熟，但是这种原生实现Harnessed Agentic RL大概率是未来的主流范式。
 
-###### HAR System Patterns
-
-###### System Design Pattern1:
+###### Harnessed Agentic RL训练系统范式
+###### Pattern1: Polar
 1. LLM-API-Gateway
 提供兼容 OpenAI 的 LLM 代理接口。Harness 的每次模型调用都会自动关联到对应的 rollout，记录 prompt token IDs、response token IDs 和 nodeprob。Gateway 不参与梯度计算，只做观测和记录。
 2. Rollout Controller
@@ -36,11 +39,10 @@ Harness作为黑盒负责环境交互，同时通过LLM-API-proxy（LLM-Endpoint
 3. Customized Trainer
 负责收集日志、根据前述规则构建训练样本、计算优势值和 loss、执行策略更新。更新时会暂停 API 请求，降低策略陈旧问题。
 
-###### System Design Pattern2:
+###### Pattern2: AgentlightningV1.0
 
-###### System Design Pattern3:
+###### Pattern3: QwenCode？DeepSeekHarness
 
-###### Case Study
 
 ###### Harnessed Agentic RL Optimization
 在三个场景上做了验证：
@@ -63,6 +65,8 @@ Harness作为黑盒负责环境交互，同时通过LLM-API-proxy（LLM-Endpoint
 - 重试去重、外网隔离和奖励投机的防护还需要持续完善。
 - 结果尚未覆盖所有超长 Agent 场景。
 整体来说，论文的贡献在于把"用什么 harness 运行"从部署细节提升为训练变量，并提供了一个可复现的测试平台来系统研究这些问题。
+
+###### Case Study
 
 ###### Agentic-RL框架 VS Harnessed-Agentic-RL框架
 在真实长程任务中，Agent 仍然容易出错，尤其是在超长程，多轮交互、或不熟悉的工具场景下。Agent 已经够强，但还不够可靠，需要 RL-training 来进一步提升。
