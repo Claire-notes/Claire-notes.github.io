@@ -30,6 +30,7 @@ title: Harnessed Agentic RL (01)
 🔹 aReal
 
 🔹 Molt￼ （NVIDIA NeMo，2026.07）
+![这是图片](/images/2026-10-25-HarnessedAgenticRL/molt.jpeg "Polar Framework")
 
 - ​​核心设计​​：PyTorch 原生框架，约 8.6K 行代码，强调紧凑可追溯。单一异步环训练多模态和 MoE 策略。
 - ​​定位​​：白盒路线，面向算法研究者频繁改动的需求，强调"整个代码库能装进脑子"。
@@ -66,7 +67,7 @@ Polar 解决了"怎么观察"的问题，但没有处理后续的训练挑战—
 负责收集日志、根据前述规则构建训练样本、计算优势值和 loss、执行策略更新。更新时会暂停 API 请求，降低策略陈旧问题。
 
 ###### Pattern2: 🔹 Agent LightningV1.0（微软，2026.08）
-![这是图片](/images/my-logo.png "Magic Gardens")
+![这是图片](/images/2026-10-25-HarnessedAgenticRL/agentlightning.jpeg "Polar Framework")
 
 在黑盒路线上做了一次系统性的补全。
 - ​​核心设计​​：同样通过 API Gateway 中的 LLM Proxy 拦截请求，但和 Polar 不同，Agent Lightning 在 Gateway 层主动做 retokenization 对齐（统一 chat template），并系统研究了 retokenization shift 的三个来源。
