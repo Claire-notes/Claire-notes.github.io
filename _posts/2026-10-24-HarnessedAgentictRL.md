@@ -9,17 +9,17 @@ title: Harnessed Agentic RL (01)
 背景：Agent = 大语言模型（LLM） + 运行框架（Harness）。Agent 的演进与 Harness 的崛起。
 现在的Agent是运行在Harness框架内的(LLM/Agent)复合系统，不再是一个单体模型(LLM/Agent)与环境直接交互。Harness负责决策模型如何思考规划、多轮调用工具和行动、感知和管理上下文、多智能体协同及结果存储和评估，Harness已经是Agent的核心组件。
 
-2023-2025：早期的Agent-RL，是在训练引擎中直接实现AgentLoop交互循环(直接写入GPU Cluster)，模型与环境交互是原生Token-in/Token-out API结构，所以在整个执行过程中每个rollout样本保持着在时间上连续的Token序列流，天然不存在Decode-encode drift问题，保证了强化学习在完全的 On-policy 状态下高效收敛。  
+- 2023-2025：早期的Agent-RL，是在训练引擎中直接实现AgentLoop交互循环(直接写入GPU Cluster)，模型与环境交互是原生Token-in/Token-out API结构，所以在整个执行过程中每个rollout样本保持着在时间上连续的Token序列流，天然不存在Decode-encode drift问题，保证了强化学习在完全的 On-policy 状态下高效收敛。  
 
-2025-至今：Harnessed Agentic RL，由于harness控制工具调用、上下文拼接、流程流转与多智能体协同，一次任务可能会被拆分成动态次数的模型请求，harness内部管理请求间的状态信息传递和重试，与环境交互主要采用Message API/Response API，随之产生Decode-encode drift问题导致RL训练陷入非真实环境off-policy。  
+- 2025-至今：Harnessed Agent，由harness控制工具调用、上下文拼接、流程流转与多智能体协同，一次任务可能会被拆分成动态次数的模型请求，harness与环境交互主要采用Message API/Response API，随之产生Decode-encode drift问题导致RL训练陷入非真实环境off-policy。  
   
-同时Harness 越做越复杂——工具链、上下文管理、子agent 调度、失败重试、沙箱隔离，每个harness背后是一套完整的工程系统。想要把整套 harness 逻辑​​重写进训练框架​​，已经不太可能。  
+- 同时Harness 越来越复杂：工具链、上下文管理、子agent 调度、失败重试、沙箱隔离，每个harness背后是一套完整的工程系统。
 
 > *Decode-encode drift：decode后再encode和原来token序列不同；导致模型训练看到的token序列与此前推理时token序列不同，模型在学习一个非真实的输入（off-policy），破坏算法收敛性*    
 
 为什么转变到Harnessed Agentic RL：  
-1. ​​Harness复杂度​​越来越高，重写入训练引擎成本已经不可接受：想要把庞大的Harness逻辑在训练框架（如 Megatron-LM 或 FSDP）内部用 PyTorch 重写，边际成本与维护代价极高，在工程上基本不可行。
-2. 训练-部署一致性（Training-Deployment Consistency）​​：强行在训练框架内生构一套简化的 Harness 进行交互训练，会导致在训练harness上学到的策略，在部署harness下可能完全失效。
+1. ​​Harness复杂度​​变高：重写入训练引擎已经不可接受，想要把庞大的Harness逻辑在训练框架（如 Megatron-LM 或 FSDP）内部用 PyTorch 重写，边际成本与维护代价极高。
+2. 训练-部署一致性（Training-Deployment Consistency）​​：强行在训练框架内使用简化的不同的Harness进行交互训练，再叠加Decode-encode drift问题，会导致在‘训练环境harness’上训练的模型，在‘部署环境harness’下严重失效。
 
 ###### Agentic RL训练范式
 训练框架直接持有LLM/Agent运行时状态，需要把Agent的执行过程（rollout）与环境交互循环逻辑写进训练框架(GPU Cluster)，让训练器拿到模型每次生成的（tokenization、轨迹记录、loss mask 构建）。  
