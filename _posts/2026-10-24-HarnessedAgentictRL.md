@@ -13,7 +13,7 @@ title: Harnessed Agentic RL (01)
 
 - 2025-至今：Harnessed Agent，由harness控制工具调用、上下文拼接、流程流转与多智能体协同，一次任务可能会被拆分成动态次数的模型请求，harness与环境交互主要采用Message API/Response API，随之产生Decode-encode drift问题导致RL训练陷入非真实环境off-policy。  
   
-- 同时Harness 越来越复杂：工具链、上下文管理、子agent 调度、失败重试、沙箱隔离，每个harness背后是一套完整的工程系统。
+- Harness 越来越复杂：工具链、上下文管理、子agent 调度、失败重试、沙箱隔离，每个harness背后是一套完整的控制系统。
 
 > *Decode-encode drift：decode后再encode和原来token序列不同；导致模型训练看到的token序列与此前推理时token序列不同，模型在学习一个非真实的输入（off-policy），破坏算法收敛性*    
 
