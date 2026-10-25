@@ -4,43 +4,36 @@ title: Harnessed Agentic RL (01)
 ---
 
 ###### 今天聊一聊 Harnessed Agentic RL  
-P1:
+
+###### Harnessed Agentic RL产生的背景 
 Agent = 大语言模型（LLM） + 运行框架（Harness）。
-现代智能体不再作为独立的大模型运行。它们运行在复杂的运行框架（Harness）内部，该框架负责管理长周期上下文、多轮工具调用、上下文工程以及多智能体协同，这使得 Harness 成为智能体不可或缺的核心组件。如何将部署时真实的 Harness 直接引入到模型的强化学习（RL）训练循环中，从而缩小训练与实际部署使用之间的差距，正是 Harnessed Agentic RL（受框架约束的智能体强化学习） 这一术语的直观定义。
-在传统的智能体强化学习中，训练引擎完全接管了环境交互循环。其智能体循环（Agent loop）直接嵌入在 GPU 集群内部，呈现出一种原生的 Token-in/Token-out（Token 输入输出）API 结构，并在整个执行过程中维持着完全连续的 Token 序列流。
-Harnessed Agentic RL 与传统的智能体强化学习有着本质的区别，并引入了一系列全新的挑战。
+现在Agent不再是一个独立的大模型交互，而是运行在Harness框架内部，该框架负责管理长周期上下文、多轮工具调用、上下文工程以及多智能体协同，Harness已经是智能体不可或缺的核心组件。
+过去的Agent RL是训练引擎中实现了Agent loop交互循环(Agent-loop直接写入GPU Cluster)，是原生的 Token-in/Token-out API 结构，所以在整个执行过程中每个rollout样本保持着时间连续的Token序列流，不存在Decode-encode drift问题。
+想比与传统Agent RL，Harness Agent，由于harness控制工具调用、上下文拼接和流程控制，一次任务会拆分成动态次数的模型请求，harness管理这些请求之间的状态传递和重试采用的多是Completation API（也就是Message API/Response API），Decode-encode drift会直接导致Token连续序列流天然中断。这些会带来Harnessed Agentic RL与传统的Agent RL有本质区别。
 
-Agent = LLM + Harness.  
-Modern agents do not operate as standalone LLMs. They run inside **Harness** that manage long-running context, multi-turn tool use, context, and multi-agent orchestration which makes the harness a critical component. How to **directly porting the deploy-time Harness into model RL-training**, thereby narrowing the gap between training and actual use is the term **Harnessed Agentic RL**.
-
-The **Harnessed Agentic RL** differs fundamentally from traditional agentic RL and introduces a new set of challenges.
-In traditional agentic RL, the training engine owns the environment interaction loop. The agent loop is embedded directly within the GPU cluster, presenting a native token-in/token-out API structure，maintaining a continuous token sequence stream throughout the execution.
-
-P2:
-现在的 Agent 由 harness 控制工具调用、上下文拼接和流程控制。一次任务会拆分成动态次数的模型请求，harness 负责管理这些请求之间的状态传递和重试.
-此前的Agentic RL想要做好训练，必须把Agent的执行过程（rollout）接入训练流水线，做法是把整个环境交互循环逻辑写进训练框架，让训练器拿到模型每次生成的token 序列，(本质是训练和部署是两套分别的harness)。这导致三个问题：
+传统的Agentic RL训练范式是：把Agent的执行过程（rollout）接入训练是依赖把整个环境交互循环逻辑写进训练框架(GPU Cluster)，让训练器拿到模型每次生成的token序列，这本质是训练和部署是两套分别的‘harness’。这种训练范式带来三个问题：
 1. ​​训练-部署不一致​​：训练时看到的 prompt 和部署时模型实际看到的 prompt 可能不同。
 2. ​​训练框架维护成本高​​：更换不同harness或harness更新 就要重写RL训练逻辑框架(训练代码、适配API格式、处理KVcache、对齐token序列)。
 3. 训练数据无法重复利用：原Harness累积的训练数据无法复用，数据资源和GPU资源大量浪费
-更重要的趋势是：
-现在Harness框架已经庞大复杂到无法写入GPU Clauster（Claud code，codex，Qwen Code，DSH等）；因此，training/execution解耦架构才是Harness Agent RL的未来大趋势。通过大模型 API-proxy（LLM-Endpoint-Proxy），在几乎不修改Agent源码的前提下，将Harness无缝接入强化学习训练。
-基于代理（Proxy-based）的黑盒交互范式已在verl Uni-Agent、AReaL 2.0、slime v0.3.0 和 Polar 逐步采用，虽然整体还在初期仍不完整成熟，但是这种原生实现（Harnessed Agentic RL）应该是未来的主流范式。
-​​Harnessed Agentic RL​​范式：部署时的harness直接参与模型 RL-training。
+   
+除这个三个关键问题外，Harness agent基于传统Agent RL训练范式也是行不通的：
+4.Harness框架已经庞大复杂到无法写入GPU Clauster（Claud code，codex，Qwen Code，DSH等）；
+5.就算Harness能够写入GPUClauster，Decode-encode drif导致的token流断裂和样本动态性会带来RL训练的极不稳定甚至失效 
 
-P3:
-问题动机
-Harnessed Agentic RL：​​harness 继续负责环境交互，训练引擎只通过一个 LLM Proxy 观察请求-响应轨迹​​。这样 harness 不需要重写，训练和部署保持一致。
+​​Harnessed Agentic RL​​范式：training/execution解耦架构，让部署时的harness直接参与RL-training。
+​​harness作为黑盒负责环境交互，同时通过LLM-API-proxy（LLM-Endpoint-Proxy）和推理引擎交互；训练引擎同样LLM-API-Proxy 观察请求-响应轨迹​​。这样 harness 不需要写入GPUClauster，使得训练和部署保持一致。在几乎不修改Agent源码的前提下，可以将不同Harness无缝接入强化学习训练。基于代理（Proxy-based）的黑盒交互范式已在verl Uni-Agent、AReaL 2.0、slime v0.3.0 和 Polar 逐步采用，虽然整体还在初期仍不完整成熟，但是这种原生实现Harnessed Agentic RL大概率是未来的主流范式。
+
+###### Agentic RL VS Harnessed Agentic RL
 System Design（系统设计）
-Agent Lightning v1.0 由三个核心组件构成：
-1. API Gateway
-提供兼容 OpenAI 的 LLM 代理接口。Harness 的每次模型调用都会自动关联到对应的 rollout，记录 prompt token IDs、response token IDs 和 logprob。Gateway 不参与梯度计算，只做观测和记录。
+1. LLM-API-Gateway
+提供兼容 OpenAI 的 LLM 代理接口。Harness 的每次模型调用都会自动关联到对应的 rollout，记录 prompt token IDs、response token IDs 和 nodeprob。Gateway 不参与梯度计算，只做观测和记录。
 2. Rollout Controller
 负责启动和管理 Agent 执行。支持两种运行方式：​​本地进程​​ 和 ​​Kubernetes 任务​​。原生支持 K8s 意味着不需要依赖 Modal、E2B 等商业沙盒服务，可以直接用自建集群做大规模 rollout。
 3. Customized Trainer
 负责收集日志、根据前述规则构建训练样本、计算优势值和 loss、执行策略更新。更新时会暂停 API 请求，降低策略陈旧问题。
-整个框架约 3500 行代码，强调简单性作为第一设计原则。
 
-📊 Experiments（实验）
+
+###### 实验
 在三个场景上做了验证：
 1. 通用指令遵循 Agent
 在 HotpotQA 上，Llama-3.2-3B 的验证奖励从 25.1 提升到 41.7。
