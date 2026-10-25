@@ -69,6 +69,7 @@ Harnessed Agentic RL​​范式：让部署时的harness直接参与RL-training
 基于代理（Proxy-based）的黑盒交互范式已在verl Uni-Agent、AReaL 2.0、slime v0.3.0 逐步采用，虽然整体还在初期仍不完整成熟，但是这种原生实现Harnessed Agentic RL大概率是未来主流范式。
 ​​
 ###### Pattern1: 🔹 Polar￼ （NVIDIA，2026.05）
+![这是图片](/images/2026-10-25-HarnessedAgenticRL/polar.jpeg "Polar Framework")
 黑盒路线的开创性工作。
 - ​​核心设计​​：在模型 API 端点处放置 Agent Proxy，直接记录推理服务器返回的原始 token IDs 和 logprob，不做 decode-encode。支持两种轨迹构建方式：per_request 和 prefix merging￼ （约 5.4 倍加速）。
 - ​​Rollout 架构​​：Rollout Server 负责异步调度，Gateway Node 负责实际执行和工具调用。
