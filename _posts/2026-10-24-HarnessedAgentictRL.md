@@ -3,7 +3,7 @@ layout: post
 title: Harnessed Agentic RL (01)
 ---
 
-###### 今天聊一聊 Harnessed Agentic RL  
+###### 今天聊一聊 Harnessed Agentic RL（简称HAR）  
 
 ###### Harnessed Agentic RL产生的背景 
 Agent = 大语言模型（LLM） + 运行框架（Harness）。
@@ -26,8 +26,9 @@ Agent = 大语言模型（LLM） + 运行框架（Harness）。
 ​​Harnessed Agentic RL​​范式：Training/Execution解耦架构，让部署时的harness直接参与RL-training。  
 Harness作为黑盒负责环境交互，同时通过LLM-API-proxy（LLM-Endpoint-Proxy）和推理引擎交互；训练引擎同样LLM-API-Proxy 观察请求-响应轨迹​​。这样harness 不需要写入GPUClauster，使得训练和部署保持一致。在几乎不修改Agent源码的前提下，可以将不同Harness无缝接入强化学习训练。基于代理（Proxy-based）的黑盒交互范式已在verl Uni-Agent、AReaL 2.0、slime v0.3.0 和 Polar 逐步采用，虽然整体还在初期仍不完整成熟，但是这种原生实现Harnessed Agentic RL大概率是未来的主流范式。
 
-###### Agentic RL VS Harnessed Agentic RL
-System Design（系统设计）
+###### HAR System Patterns
+
+###### System Design Pattern1:
 1. LLM-API-Gateway
 提供兼容 OpenAI 的 LLM 代理接口。Harness 的每次模型调用都会自动关联到对应的 rollout，记录 prompt token IDs、response token IDs 和 nodeprob。Gateway 不参与梯度计算，只做观测和记录。
 2. Rollout Controller
@@ -35,8 +36,13 @@ System Design（系统设计）
 3. Customized Trainer
 负责收集日志、根据前述规则构建训练样本、计算优势值和 loss、执行策略更新。更新时会暂停 API 请求，降低策略陈旧问题。
 
+###### System Design Pattern2:
 
-###### 实验
+###### System Design Pattern3:
+
+###### Case Study
+
+###### Harnessed Agentic RL Optimization
 在三个场景上做了验证：
 1. 通用指令遵循 Agent
 在 HotpotQA 上，Llama-3.2-3B 的验证奖励从 25.1 提升到 41.7。
@@ -96,7 +102,7 @@ Harnessed Agentic RL 不是简单地把 proxy 插上就能用，它有全新的�
 整个 Introduction 的逻辑非常紧凑，每一步都在为下一步做铺垫，没有多余的背景堆砌。
 
 
-###### 一些挑战 
+###### Future Challenges 
 Challenges（挑战）
 1. Retokenization
 训练引擎拿到的请求-响应对，如果要拼成连续的训练轨迹，需要把文本 decode 再 re-encode 成 token IDs。但 harness 和训练引擎的 tokenizer、chat template 可能不一致，导致 token 级别的前缀对不上，模型学到的是它从未见过的 prompt。
@@ -110,6 +116,22 @@ Challenges（挑战）
 5. Training Backend Scheduling（训练后端调度）
 每个 rollout 产生多少样本、每个样本多长，只有 harness 执行完才能确定，但 GPU 数量和并行配置是固定的。后端需要动态地把可变长度、可变数量的样本映射到固定的训练资源上。
 
-###### 一些实验结果比对
+###### Citation
+Please cite this work as:
+Claire. “Harnessed Agentic-RL Optimization”. Claire-notes (Oct 2026). https://claire-notes.github.io/HarnessedAgentictRL
+
+Or use the BibTeX citation:
+```json
+{
+@article{weng2026harness,
+  title = {Harnessed Agentic-RL Optimization},
+  author = {Claire (qingYe)},
+  journal = {claire-notes.github.io},
+  year = {2026},
+  month = {October},
+  url = "https://claire-notes.github.io/HarnessedAgentictRL"
+}
+```
+
 
 
