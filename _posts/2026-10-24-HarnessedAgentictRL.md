@@ -4,7 +4,6 @@ title: Harnessed Agentic RL (01)
 ---
 
 ###### 简单聊聊 Harnessed Agentic RL（简称HAR） 
-​
 ###### Harnessed Agentic RL产生的背景 
 背景：Agent = 大语言模型（LLM） + 运行框架（Harness）。Agent 的演进与 Harness 的崛起。
 现在的Agent是运行在Harness框架内的(LLM/Agent)复合系统，不再是一个单体模型(LLM/Agent)与环境直接交互。Harness负责决策模型如何思考规划、多轮调用工具和行动、感知和管理上下文、多智能体协同及结果存储和评估，Harness已经是Agent的核心组件。
