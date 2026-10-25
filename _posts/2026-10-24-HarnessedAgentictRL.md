@@ -25,11 +25,13 @@ title: Harnessed Agentic RL (01)
 🔹 veRL￼
 - ​​核心设计​​：原生支持协程式 Agent（白盒），框架直接持有运行时状态。在面对黑盒 Agent 时（外部 CLI 子进程、远程 HTTP 服务），需要走完全不同的集成路径。
 - ​​定位​​：白盒是 veRL 的原生模式，黑盒适配需要额外工作。
-- 🔹 SLIME v3.0￼
+  
+🔹 SLIME v3.0￼
 - ​​核心设计​​：白盒路线的另一套实现，训练引擎直接管理 rollout 和环境交互。
 - ​​局限​​：和前两者相同。
 
 🔹 aReal
+
 
 🔹 Molt￼ （NVIDIA NeMo，2026.07）
 ![这是图片](/images/2026-10-25-HarnessedAgenticRL/molt.jpeg "Polar Framework")
