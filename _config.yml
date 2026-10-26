@@ -52,7 +52,7 @@ url: # https://yeqing17-2026.github.io/OmniAgent/
 # (http://yourusername.github.io/repository-name)
 # and NOT your User repository (http://yourusername.github.io)
 # then add in the baseurl here, like this: "/repository-name"
-baseurl: # https://yeqing17-2026.github.io/OmniAgent/
+baseurl: "" # https://yeqing17-2026.github.io/OmniAgent/
 
 #
 # !! You don't need to change any of the configuration flags below !!
