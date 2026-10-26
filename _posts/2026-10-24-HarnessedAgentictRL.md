@@ -77,6 +77,7 @@ Polar 解决了"怎么观察"的问题，但没有处理后续的训练挑战—
 - ​​效果​​：Qwen3.5-9B，6K 样本，SWE-bench Verified 从 41.8% 提升到 56.4%。
 
 ###### Pattern3: 🔹 OpenForgeRL（微软 / 哥伦比亚，2026.07）
+![这是图片](/images/2026-10-25-HarnessedAgenticRL/OpenForge.jpeg "OpenForge Framework")
 Forge: Scalable Agent RL Framework and Algorithm，trainer、rollout、agent均是分离的结构，其优势就是可以训练黑盒 + 白盒的agent，理论上可以训练任何agent。
 
 - ​​核心设计​​：同样通过API Gateway拦截记录Harness的LLM调用，路由到RL推理引擎并记录轨迹。
@@ -92,7 +93,7 @@ Forge: Scalable Agent RL Framework and Algorithm，trainer、rollout、agent均�
 
 
 ###### Case Study，一些实验
-
+![这是图片](/images/2026-10-25-HarnessedAgenticRL/exp.jpeg "Exp Result")
 
 
 ###### Challenges 
