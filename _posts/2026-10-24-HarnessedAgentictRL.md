@@ -3,6 +3,7 @@ layout: post
 title: Harnessed Agentic RL (01)
 ---
 ###### Harnessed Agentic RL产生的背景 
+***
 **Agent = 大语言模型（LLM） + 运行框架（Harness）。Agent大规模落地与 Harness崛起。**
 现在的Agent是运行在Harness框架内的(LLM/Agent)复合系统，不再是单体模型(LLM/Agent)与环境直接交互。Harness负责决策模型如何思考规划、多轮调用工具和行动、感知和管理上下文、多智能体协同及结果存储和评估，是Agent的重要组件。
 
@@ -13,44 +14,44 @@ title: Harnessed Agentic RL (01)
 - **Harness逐渐复杂**：工具链、上下文管理、子agent调度、失败重试、沙箱隔离，harness演变为一套完整控制系统。
  
 ###### 为什么需要Harnessed Agentic RL范式
+***
 **传统Agentic-RL训练范式失效**
 - ​​Harness复杂度​​高：重写入训练引擎已经不可接受，把Harness逻辑在训练框架Megatron-LM 或 FSDP内重写，边际成本与维护代价极高。
 - 训练-部署一致性（Training-Deployment Consistency）​​：强行在训练框架内使用**简化的不同的Harness**进行交互训练，再叠加Decode-encode drift问题，会导致在‘训练环境harness’上训练的模型，在‘部署环境harness’下严重失效。  
 - Decode-encode drift：decode后再encode和原来token序列不同；导致模型训练看到的token序列与此前推理时token序列不同，模型在学习一个非真实的输入（off-policy），破坏算法收敛性。  
 
-###### Agentic RL训练系统范式
-**​​核心设计**​​ 
+###### 传统Agentic RL训练系统范式
+***
 - 训练框架直接持有LLM/Agent运行时状态，需要把Agent的执行过程（rollout）与环境交互逻辑写进训练框架(GPU Cluster)，训练器拿到模型每次生成的（tokenization、轨迹记录、loss mask） 构建数据 
 - **训练和部署时本质是两套不同（分别实现）的‘harness’**  
 这类框架主要有：veRL、Molt、slime、aReal。 
 
-🔹 veRL（Seed, 2025）
+###### Pattern1: 🔹 veRL（Seed, 2025）
 ***
 ![这是图片](/images/2026-10-25-HarnessedAgenticRL/verl.jpeg "veRL Framework")
 
-
-🔹 Molt （NVIDIA NeMo，2026.07）
+###### Pattern2: 🔹 Molt （NVIDIA NeMo，2026.07）
 ***
 ![这是图片](/images/2026-10-25-HarnessedAgenticRL/molt.jpeg "Molt Framework")
 
-**这类框架范式的3大问题**  
+**传统Agent RL的3大问题**  
 - 训练-部署不一致​​：训练时看到的 prompt 和部署时模型实际看到的 prompt 可能不同。  
 - 训练维护成本高​​：更换不同harness或harness更新 就要重写RL训练逻辑框架(训练代码、适配API格式、处理KVcache、对齐token序列)。  
 - 训练数据低复用率：原Harness累积的训练数据无法复用，数据资源和GPU资源大量浪费。  
 
-**此外，Harnessed agent RL训练基于传统范式也已经行不通，原因是：**
+**此外，Harnessed Agentic RL基于传统范式已经行不通，原因是：**
 - Harness框架已经庞大复杂到无法写入GPU Clauster（Claud code，codex，Qwen Code，DSH等）。
 - 就算Harness经简化后能写入GPUClauster，叠加Decode-encode drif带来的样本动态性加剧会导致RL训练不稳定或失效。 
 
-​
+
 ###### Harnessed Agentic RL训练系统范式
+***
 **​​让部署harness直接参与RL-training**
 - 基于LLM-API-Proxy，训练引擎不再重写Harness，只通过Proxy记录每次LLM（请求-响应）轨迹，合并组装为样本。使得训练和部署Harness同一，从根本上消除了训练-部署偏差。
 - Harnessed Agentic RL范式正从"训练引擎重现交互"转向"训练引擎只做观察"，**是工业界Agentic RL正在转向的范式**。
 - 这种框架目前主要有**Polar、AgentLightningV1.0、OpenForge**。
 - 传统框架也在转变：verl **Uni-Agent**、AReaL-2.0、slime-v0.3.0落地中。
 
-​
 ###### Pattern1: 🔹 Polar （NVIDIA，2026.05）
 ***
 ![这是图片](/images/2026-10-25-HarnessedAgenticRL/polar.jpeg "Polar Framework")
@@ -86,14 +87,18 @@ Polar 解决了"怎么观察"的问题，但没有处理后续的训练挑战—
 - ​​定位​​：和 Polar、Agent Lightning 类似，强调"不实现harness就能训"。
 
 ###### Harnessed Agentic RL vs Agentic RL
-- 更长程的Personal-Agent/ Work-Agent会更依赖Harnessed-RL优化。传统方法每换Harness就要重写，训推严重不一致。2026年下半年技术趋势开始走向Harnessed Agentic RL，核心是部署时的Harness直接主导交互，实现训练引擎零重写和训推严格一致。
+***
+- 2026年下半年技术趋势开始走向Harnessed Agentic RL，由部署时的Harness统一主导交互，实现训练引擎零重写和训推严格一致。
+- 传统Agentic RL每换Harness需要重写，训推不一致。
+- 长程的Personal-Agent/ Work-Agent会更依赖Harnessed Agentic RL方法。
 - API-Proxy架构基本成型：目前止步于“观察记录”，后续训练中：Token级信号还原、样本动态性缓解、长程轨迹合并、优势计算等挑战，现有技术方案还不完善。
 
 ###### Case Study & 一些实验
 ***
 ![这是图片](/images/2026-10-25-HarnessedAgenticRL/exp.jpeg "Exp Result")
 
-###### Future Challenges 
+###### Future Challenges
+***
 - Retokenization：训练引擎拿到的请求-响应对，需要拼成连续的训练轨迹。但 harness 和训练引擎的 tokenizer、chat template 可能不一致，导致 token 级别的前缀对不上，模型学到的是历史未发生的轨迹。retokenization shift 的三个来源：tokenizer 差异、chat template 差异、inference engine后处理。除chat tempalte可解决，其他问题目前没有彻底的解决方案。
 - Sample Merging：一个 rollout 可能产生多个请求-响应对，这些对能否合并成一个训练样本，取决于后一个请求的 prompt 是否和前一个请求+响应的 token 级前缀精确一致。实际中约 36% 的 rollout 可以合并成，单次rollout平均产生 2.41个训练样本。
 - Advantage Calculation：如果按单个请求计算优势值，多请求的 rollout 会获得更大的总权重。但由于请求数量是 harness 内部行为的结果，不代表任务更难或更重要，因此优势应该按 ​​完整 rollout 成组计算​​，先在 rollout 内做 token 平均，再对 rollout 平均。
@@ -104,6 +109,7 @@ Polar 解决了"怎么观察"的问题，但没有处理后续的训练挑战—
 - 跨Harness迁移与超长程Agent验证：训练数据复用、模型效果验证。
 
 ###### Citation
+***
 Please cite this work as:
 Claire. “Harnessed Agentic-RL Optimization”. Claire-notes (Oct 2026). https://claire-notes.github.io/HarnessedAgentictRL
 
@@ -119,3 +125,4 @@ Or use the BibTeX citation:
   url = "https://claire-notes.github.io/HarnessedAgentictRL"
 }
 ```
+***
