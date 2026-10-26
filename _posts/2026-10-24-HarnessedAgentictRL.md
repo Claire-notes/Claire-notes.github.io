@@ -11,18 +11,18 @@ title: Harnessed Agentic RL (01)
 
 - **2025-至今**：Harnessed-Agent-RL，由harness控制工具调用、上下文拼接、流程流转与多智能体协同，一次任务可能会被拆分为动态次的模型请求，harness与环境交互主要采用Message API/Response API，随之产生Decode-encode drift问题导致RL训练陷入非真实环境off-policy。  
   
-- **Harness逐渐复杂**：工具链、上下文管理、子agent调度、失败重试、沙箱隔离，harness演变为一套完整控制系统。
+- **Harness复杂**：工具链、上下文管理、子agent调度、失败重试、沙箱隔离，harness演变为一套完整控制系统。
  
 ###### 为什么需要Harnessed Agentic RL范式
 ***
-**传统Agentic-RL训练范式失效**
-- ​​Harness复杂度​​高：重写入训练引擎已经不可接受，把Harness逻辑在训练框架Megatron-LM 或 FSDP内重写，边际成本与维护代价极高。
-- 训练-部署一致性（Training-Deployment Consistency）​​：强行在训练框架内使用**简化的不同的Harness**进行交互训练，再叠加Decode-encode drift问题，会导致在‘训练环境harness’上训练的模型，在‘部署环境harness’下严重失效。  
-- Decode-encode drift：decode后再encode和原来token序列不同；导致模型训练看到的token序列与此前推理时token序列不同，模型在学习一个非真实的输入（off-policy），破坏算法收敛性。  
+**Harness出现后，传统Agentic-RL训练方法失效**
+- ​​**Harness写入训练引擎不可行**：Harness逻辑在训练框架Megatron-LM 或 FSDP内重写的边际成本与维护代价极高。
+- **Training-Deployment Consistency**​​：强行在训练框架内使用**简化的不同的Harness**进行交互训练，会导致在‘训练环境harness’上优化的模型，在‘部署环境harness’下失效。  
+- **Decode-encode drift**：Harness使用CompletionAPI，decode-encode drift导致和原来token序列不同；模型在学习一个非真实的输入（off-policy），破坏算法收敛性。  
 
-###### 传统Agentic RL训练系统范式
+###### 传统Agentic RL训练系统架构
 ***
-- 训练框架直接持有LLM/Agent运行时状态，需要把Agent的执行过程（rollout）与环境交互逻辑写进训练框架(GPU Cluster)，训练器拿到模型每次生成的（tokenization、轨迹记录、loss mask） 构建数据 
+- **训练框架直接持有LLM/Agent运行时状态**：Agent的执行过程rollout与环境交互逻辑写进训练框架(GPU-Cluster)，训练器拿到模型每次生成的（tokenization、轨迹记录、loss mask） 构建数据 
 - **训练和部署时本质是两套不同（分别实现）的‘harness’**  
 这类框架主要有：veRL、Molt、slime、aReal。 
 
@@ -36,13 +36,12 @@ title: Harnessed Agentic RL (01)
 
 **传统Agent RL的3大问题**  
 - 训练-部署不一致​​：训练时看到的 prompt 和部署时模型实际看到的 prompt 可能不同。  
-- 训练维护成本高​​：更换不同harness或harness更新 就要重写RL训练逻辑框架(训练代码、适配API格式、处理KVcache、对齐token序列)。  
-- 训练数据低复用率：原Harness累积的训练数据无法复用，数据资源和GPU资源大量浪费。  
+- 训练维护成本高​​：更换harness或harness更新，重写RL训练代码、适配API格式、处理KVcache、对齐token序列。  
+- 训练数据复用低：原Harness累积的训练数据无法复用，数据资源和GPU资源浪费。  
 
-**此外，Harnessed Agentic RL基于传统范式已经行不通，原因是：**
-- Harness框架已经庞大复杂到无法写入GPU Clauster（Claud code，codex，Qwen Code，DSH等）。
-- 就算Harness经简化后能写入GPUClauster，叠加Decode-encode drif带来的样本动态性加剧会导致RL训练不稳定或失效。 
-
+**此外，Harnessed Agentic RL基于传统范式已经行不通：**
+- Harness框架（Claud code，codex，Qwen Code，DSH等）复杂难以写入GPU Clauster。
+- 就算Harness简化写入GPU Clauster，Harness Decode-encode drif的样本动态性会导致RL训练不稳定或失效。 
 
 ###### Harnessed Agentic RL训练系统范式
 ***
