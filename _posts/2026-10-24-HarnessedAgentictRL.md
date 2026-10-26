@@ -115,8 +115,8 @@ Claire. “Harnessed Agentic RL Optimization”. Claire-notes (Oct 2026). https:
 Or use the BibTeX citation:
 ```json
 {
-@article{weng2026harness,
-  title = {Harnessed Agentic-RL},
+@article{Claire-HarnessAgenticRL,
+  title = {Harnessed Agentic RL},
   author = {Claire (qingYe)},
   journal = {claire-notes.github.io},
   year = {2026},
