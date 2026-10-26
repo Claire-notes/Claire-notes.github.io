@@ -28,7 +28,7 @@ title: Harnessed Agentic RL (01)
 
 ###### Pattern1: 🔹 veRL（Seed, 2025）
 ***
-![这是图片](/images/2026-10-25-HarnessedAgenticRL/verl.jpeg "veRL Framework")
+![这是图片](/images/2026-10-25-HarnessedAgenticRL/verl.png "veRL Framework")
 
 ###### Pattern2: 🔹 Molt （NVIDIA NeMo，2026.07）
 ***
