@@ -110,7 +110,7 @@ Polar 解决了"怎么观察"的问题，但没有处理后续的训练挑战—
 ###### Citation
 ***
 Please cite this work as:
-Claire. “Harnessed Agentic-RL Optimization”. Claire-notes (Oct 2026). https://claire-notes.github.io/HarnessedAgentictRL
+Claire. “Harnessed Agentic RL Optimization”. Claire-notes (Oct 2026). https://claire-notes.github.io/HarnessedAgentictRL
 
 Or use the BibTeX citation:
 ```json
