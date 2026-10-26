@@ -35,9 +35,9 @@ title: Harnessed Agentic RL (01)
 ![这是图片](/images/2026-10-25-HarnessedAgenticRL/molt.jpeg "Molt Framework")
 
 **传统Agent RL的3大问题**  
-- 训练-部署不一致​​：训练时看到的 prompt 和部署时模型实际看到的 prompt 可能不同。  
-- 训练维护成本高​​：更换harness或harness更新，重写RL训练代码、适配API格式、处理KVcache、对齐token序列。  
-- 训练数据复用低：原Harness累积的训练数据无法复用，数据资源和GPU资源浪费。  
+- **训练-部署不一致**​​：训练时看到的 prompt 和部署时模型实际看到的 prompt 可能不同。  
+- **训练维护成本高**​​：更换harness或harness更新，重写RL训练代码、适配API格式、处理KVcache、对齐token序列。  
+- **训练数据复用低**：原Harness累积的训练数据无法复用，数据资源和GPU资源浪费。  
 
 **此外，Harnessed Agentic RL基于传统范式已经行不通：**
 - Harness框架（Claud code，codex，Qwen Code，DSH等）复杂难以写入GPU Clauster。
@@ -85,7 +85,7 @@ Polar 解决了"怎么观察"的问题，但没有处理后续的训练挑战—
 - Rollout Orchestrator：启动远程沙箱Harness与环境进行交互并调用LLM，ProxyServer拦截LLM调用、路由至推理引擎、记录轨迹。
 - ​​定位​​：和 Polar、Agent Lightning 类似，强调"不实现harness就能训"。
 
-###### Harnessed Agentic RL vs Agentic RL
+###### Harnessed Agentic RL 2026趋势
 ***
 - 2026年下半年技术趋势开始走向Harnessed Agentic RL，由部署时的Harness统一主导交互，实现训练引擎零重写和训推严格一致。
 - 传统Agentic RL每换Harness需要重写，训推不一致。
@@ -98,14 +98,14 @@ Polar 解决了"怎么观察"的问题，但没有处理后续的训练挑战—
 
 ###### Future Challenges
 ***
-- Retokenization：训练引擎拿到的请求-响应对，需要拼成连续的训练轨迹。但 harness 和训练引擎的 tokenizer、chat template 可能不一致，导致 token 级别的前缀对不上，模型学到的是历史未发生的轨迹。retokenization shift 的三个来源：tokenizer 差异、chat template 差异、inference engine后处理。除chat tempalte可解决，其他问题目前没有彻底的解决方案。
-- Sample Merging：一个 rollout 可能产生多个请求-响应对，这些对能否合并成一个训练样本，取决于后一个请求的 prompt 是否和前一个请求+响应的 token 级前缀精确一致。实际中约 36% 的 rollout 可以合并成，单次rollout平均产生 2.41个训练样本。
-- Advantage Calculation：如果按单个请求计算优势值，多请求的 rollout 会获得更大的总权重。但由于请求数量是 harness 内部行为的结果，不代表任务更难或更重要，因此优势应该按 ​​完整 rollout 成组计算​​，先在 rollout 内做 token 平均，再对 rollout 平均。
-- Loss Normalization：类似地，如果直接按样本数量平均 loss，产生更多样本的 rollout 会获得更大的优化权重。损失归一化也需要避免被样本数量扭曲，同样以 rollout 为统计单位。
-- Training Backend Scheduling：每个 rollout 产生多少样本、每个样本多长，只有 harness 执行完才能确定，但 GPU 数量和并行配置是固定的。后端需要动态地把可变长度、可变数量的样本映射到固定的训练资源上。
-- Reward Hacking：重试去重、外网隔离和奖励投机的防护还需要完善。
-- Trajectory还原：训练引擎只能看到离散的 LLM 调用，harness 内部状态和工具副作用可能难以完整还原。
-- 跨Harness迁移与超长程Agent验证：训练数据复用、模型效果验证。
+- **Retokenization**：训练引擎拿到的请求-响应对，需要拼成连续的训练轨迹。但 harness 和训练引擎的 tokenizer、chat template 可能不一致，导致 token 级别的前缀对不上，模型学到的是历史未发生的轨迹。retokenization shift 的三个来源：tokenizer 差异、chat template 差异、inference engine后处理。除chat tempalte可解决，其他问题目前没有彻底的解决方案。
+- **Sample Merging**：一个 rollout 可能产生多个请求-响应对，这些对能否合并成一个训练样本，取决于后一个请求的 prompt 是否和前一个请求+响应的 token 级前缀精确一致。实际中约 36% 的 rollout 可以合并成，单次rollout平均产生 2.41个训练样本。
+- **Advantage Calculation**：如果按单个请求计算优势值，多请求的 rollout 会获得更大的总权重。但由于请求数量是 harness 内部行为的结果，不代表任务更难或更重要，因此优势应该按 ​​完整 rollout 成组计算​​，先在 rollout 内做 token 平均，再对 rollout 平均。
+- **Loss Normalization**：类似地，如果直接按样本数量平均 loss，产生更多样本的 rollout 会获得更大的优化权重。损失归一化也需要避免被样本数量扭曲，同样以 rollout 为统计单位。
+- **Training Backend Scheduling**：每个 rollout 产生多少样本、每个样本多长，只有 harness 执行完才能确定，但 GPU 数量和并行配置是固定的。后端需要动态地把可变长度、可变数量的样本映射到固定的训练资源上。
+- **Reward Hacking**：重试去重、外网隔离和奖励投机的防护还需要完善。
+- **Trajectory还原**：训练引擎只能看到离散的 LLM 调用，harness 内部状态和工具副作用可能难以完整还原。
+- **跨Harness迁移与超长程Agent验证**：训练数据复用、模型效果验证。
 
 ###### Citation
 ***
