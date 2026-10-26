@@ -46,10 +46,10 @@ title: Harnessed Agentic RL (01)
 ###### Harnessed Agentic RL训练系统范式
 ***
 **​​让部署harness直接参与RL-training**
-- 基于LLM-API-Proxy，训练引擎不再重写Harness，只通过Proxy记录每次LLM（请求-响应）轨迹，合并组装为样本。使得训练和部署Harness同一，从根本上消除了训练-部署偏差。
-- Harnessed Agentic RL范式正从"训练引擎重现交互"转向"训练引擎只做观察"，**是工业界Agentic RL正在转向的范式**。
-- 这种框架目前主要有**Polar、AgentLightningV1.0、OpenForge**。
-- 传统框架也在转变：verl **Uni-Agent**、AReaL-2.0、slime-v0.3.0落地中。
+- **基于LLM-API-Proxy解耦架构**：训练引擎不再重写Harness，只通过Proxy记录每次LLM（请求-响应）轨迹，合并组装为样本。使得训练和部署Harness同一，从根本上消除了训练-部署偏差。
+- **工业界Agentic RL正在转向**：RL训练从"训练引擎重现交互"转向"训练引擎只做观察"，。
+- HAR目前主要有**Polar、AgentLightningV1.0、OpenForge**。
+- AR框架也在转变：verl **Uni-Agent**、AReaL-2.0、slime-v0.3.0落地中。
 
 ###### Pattern1: 🔹 Polar （NVIDIA，2026.05）
 ***
