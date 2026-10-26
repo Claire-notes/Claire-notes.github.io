@@ -10,6 +10,9 @@ AI Builder.
 
 Do more. Know more. Be More.
 
+OmniAgent: https://yeqing17-2026.github.io/OmniAgent/
+AI notes: https://claire-notes.github.io
+
 ### Contact me
 
 [sjsunwhhit2021@gmail.com](mailto:sjsunwhhit2021@gmail.com)
