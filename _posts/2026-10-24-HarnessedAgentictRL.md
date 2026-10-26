@@ -24,7 +24,7 @@ title: Harnessed Agentic RL (01)
 训练框架直接持有LLM/Agent运行时状态，需要把Agent的执行过程（rollout）与环境交互循环逻辑写进训练框架(GPU Cluster)，让训练器拿到模型每次生成的（tokenization、轨迹记录、loss mask 构建）。  
 本质问题：训练和部署时用的是两套不同的‘harness’。  
 🔹 veRL￼
-![这是图片](/images/2026-10-25-HarnessedAgenticRL/verl.jpeg "veRL Framework")
+![这是图片](/images/verl.jpeg "veRL Framework")
 - ​​核心设计​​：原生支持协程式 Agent（白盒），框架直接持有运行时状态。在面对黑盒 Agent 时（外部 CLI 子进程、远程 HTTP 服务），需要走完全不同的集成路径。
 - ​​定位​​：白盒是 veRL 的原生模式，黑盒适配需要额外工作。
   
