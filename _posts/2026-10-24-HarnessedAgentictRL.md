@@ -28,11 +28,11 @@ title: Harnessed Agentic RL (01)
 - 定位​​：白盒是原生模式，黑盒适配需要额外工作。
 
 🔹 veRL（字节）
-![这是图片](/images/2026-10-25-HarnessedAgenticRL/verl.jpeg "veRL Framework".   
+![这是图片](/images/2026-10-25-HarnessedAgenticRL/verl.jpeg "veRL Framework")
 
 
 🔹 Molt （NVIDIA NeMo，2026.07）.  
-![这是图片](/images/2026-10-25-HarnessedAgenticRL/molt.jpeg "Molt Framework"
+![这是图片](/images/2026-10-25-HarnessedAgenticRL/molt.jpeg "Molt Framework")
 
 这种范式主要的问题：  
 1. ​​训练-部署不一致​​：训练时看到的 prompt 和部署时模型实际看到的 prompt 可能不同。
