@@ -5,35 +5,35 @@ title: "Harnessed Agentic RL (02)：Polar 与重新定义的「样本」"
 
 ###### 一个容易误解的点：Polar 不只是 API Proxy
 ***
-NVIDIA 的 Polar 常被概括成一句话：在 Harness 和推理服务之间插一个代理，让任意 Agent 框架不改代码就能接上 RL。这个说法没错，但它解释不了另一件事——**为什么这种「黑盒训练」在数学上仍然成立**。
+Polar 常被概括成一句话：在 Harness 和推理服务之间插一个代理，让任意 Agent 框架不改代码就能接上 RL。这个说法没错，但它解释不了另一件事——**为什么这种「黑盒训练」在数学上仍然成立**。
 
-不改代码只是接口层的优化。真正被改动的是训练样本的单位：从「一次 LLM 请求」变成「一条 token 级保真的轨迹」。Polar 的核心问题，这样理解可能更准确：
+不改代码只是接口层的优化。真正影响的是训练的样本：从「一次 LLM 请求」怎么恢复「一条 token 级保真轨迹」。Polar 的核心问题，这样理解可能更准确：
 
-> Can we train Agents with RL on Any Harness without opening it?
+> Can we train Agents with RL on Any Harness without opening it? 
 
 「Any Harness」靠 API 边界解决，「without opening it」则必须靠 token 保真兜底。前者是工程，后者才是 Polar 的核心。
 
 ###### request 级样本为什么失效
 ***
-最保守的做法是 `per_request`：每一次模型调用单独成一条 trace。它对单次调用无损，但会把一次完整任务切碎——复杂 coding harness 解一道题可以产生数百条这样的样本。
+最保守的做法是 `per_request`：每一次模型调用单独成一条 trace。它对单次调用无损，但会把一次完整长程任务碎片化——coding harness 解一道题可以产生数百条这样的碎片样本。
 
-碎片化带来两个后果。第一，训练器要处理的数量暴涨；第二，信用分配变噪。Polar做了一个很说明问题的实验：把 session 级 outcome reward 广播到每条 request 级 trace 上，出现了明显的 reward hacking。原因是单条请求可能因为「碰巧接在成功轨迹里」而拿到整段任务的奖励，模型于是学会讨好采样路径，而不是解决问题。
+碎片化带来两个后果。第一，训练器要处理的样本量x10x100增长；第二，信用分配噪声。Polar做了一个实验很说明问题：把 session 级 outcome reward 广播到每条 request 级 trace 上，出现了明显的 reward hacking。原因是单条请求可能因为「碰巧接在成功轨迹里」而拿到整段任务的奖励，模型于是学会hacking采样路径，而不是解决问题。
 
 样本单位不是实现细节，它直接决定了梯度在为什么东西投票。
 
 ###### 一条不变量撑起黑盒训练
 ***
-Polar 把 correctness 压缩成一条不变量：
+Polar 的 correctness 准则：
 
-> **每一个可训练的 token，都必须来自 rollout 时行为策略的真实采样。**
+> **每个训练样本的 token，都必须来自 rollout 时行为策略的真实采样。**
 
-围绕这条不变量，有三个机制。
+围绕这个准则，有三个机制。
 
-**其一，代理只负责「看见」。** Harness 的 base URL 指向 Gateway 后，代理依次做四件事：识别协议（Anthropic Messages、OpenAI Chat、OpenAI Responses、Google generateContent）、归一化成 OpenAI Chat 形状并强制 `logprobs=true`、记录 prompt token IDs / sampled response token IDs / logprob、再还原成 Harness 期望的协议。流式请求会被换成「先拿完整响应，再合成 SSE」，Harness 无感知。
+**一，代理负责「看见」。** Harness 的 base URL 指向 Gateway 后，代理依次做四件事：识别协议（Anthropic Messages、OpenAI Chat、OpenAI Responses、Google generateContent）、归一化成 OpenAI Chat 形状并强制 `logprobs=true`、记录 prompt token IDs / sampled response token IDs / logprob、再还原成 Harness 期望的协议。流式请求会被换成「先拿完整响应，再合成 SSE」，Harness 无感知。
 
-**其二，合并只认严格前缀。** `prefix_merging` 不假设整个 session 是一条对话。只有当后一次请求的 prompt 与前一条链的末尾满足严格 token 前缀关系、且消息级分组键匹配时，才允许接上；遇到上下文压缩、子 agent、并行分支，就自然断成新链。
+**二，合并必须匹配前缀。** `prefix_merging` 不假设整个 session 是一条对话。只有当后一次请求的 prompt 与前一条链的末尾满足严格 token 前缀关系、且消息级分组键匹配时，才允许接上；遇到上下文压缩、子 agent、并行分支，就自然断成新链。
 
-**其三，loss mask 守住边界。** 合并后的轨迹里，assistant 的历史内容不能直接用服务端渲染的 canonical token，必须换回当时采样出的原始 token；夹在中间的 interstitial token 被 mask 掉，logprob 用合成值占位，只为保持数组对齐。
+**三，loss mask 守住边界。** 合并后的轨迹里，assistant 的历史内容不能直接用服务端渲染的 canonical token，必须换回当时采样出的原始 token；夹在中间的 interstitial token 被 mask 掉，logprob 用合成值占位，只为保持数组对齐。
 
 结果是：轨迹变长、样本变少，但每个参与训练的 token 都「确实发生过」。这也是 Polar 与「把日志拼一拼」的本质区别。
 
@@ -54,7 +54,7 @@ Gateway 内部把生命周期拆成四段 worker pool：INIT（起容器、装�
 实验用同一个 Qwen3.5-4B、同一套 GRPO、SWE-Gym 293 个任务，只换 Harness：
 
 | Harness | Base | Polar RL | Gain |
-|---|---|---|---|
+|------|------|------|------|
 | Codex | 3.8% | 26.4% | +22.6 |
 | Claude Code | 29.8% | 34.6% | +4.8 |
 | Qwen Code | 34.6% | 35.2% | +0.6 |
@@ -85,7 +85,7 @@ Polar 的贡献不是「多了一个兼容层」，而是证明了：只要样�
 ###### Citation
 ***
 Please cite this work as:
-Claire. "Harnessed Agentic RL (02): Polar and the Redefinition of Samples". Claire-notes (Oct 2026). https://claire-notes.github.io/Nvidia-Polar
+Claire. "Harnessed Agentic RL (02): Polar". Claire-notes (Oct 2026). https://claire-notes.github.io/Nvidia-Polar
 
 ```json
 {@article{Claire-HarnessAgenticRL-02,
