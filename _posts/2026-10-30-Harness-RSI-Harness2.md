@@ -4,8 +4,7 @@ title: "Harness优化/自进化 (01)：Harness² 与「不用打分器」的自�
 excerpt: "没有标准答案、没有人打分，Harness 怎么知道自己改得好不好？Harness² 用行为对比替代结果打分，把 Harness 自进化从「需要标准答案的实验室」推向真实工作场景。"
 ---
 
-###### 问题：真实世界中，谁来给 Harness 打分
-***
+## 问题：真实世界中，谁来给 Harness 打分
 同一个模型，换一套 Harness，表现能差出几十个百分点。这件事已经被 Polar 那篇工作证明过一次，但新的问题随之而来：
 
 **在真实工作场景里，没有标准答案、没有人打分，Harness 怎么知道自己改得好不好？**
@@ -16,8 +15,7 @@ Google 的 Harness² 换了一条路，一句话概括：
 
 > 从「看结果对不对」，转向「看做法有没有变好」。
 
-###### 方法一：把 Harness 拆成八个文件
-***
+## 方法一：把 Harness 拆成八个文件
 Harness² 不把 Harness 当成一个整体去改，而是拆成八个可编辑组件：系统提示词、护栏、记忆、技能、工具说明、脚本、子 Agent、中间件插件。每个组件以文件形式挂载，每次修改就是一份 diff——改了什么、为什么改，都能追溯。
 
 更关键的是**分两个版本改**：
@@ -31,8 +29,7 @@ Harness² 不把 Harness 当成一个整体去改，而是拆成八个可编辑�
 
 ![这是图片](/images/2026-10-30-Harness2/components.webp "Eight Harness Components")
 
-###### 方法二：Propose–Probe–Compose，用行为当证据
-***
+## 方法二：Propose–Probe–Compose，用行为当证据
 两个版本改完之后，怎么决定哪些改动留下？Harness² 不看分数，看**行为对比**。
 
 一轮改进分三步：
@@ -49,16 +46,14 @@ Harness² 不把 Harness 当成一个整体去改，而是拆成八个可编辑�
 
 ![这是图片](/images/2026-10-30-Harness2/harness2_main_new.webp "Harness2 Pipeline")
 
-###### 方法三：经验库让下一个任务少走弯路
-***
+## 方法三：经验库让下一个任务少走弯路
 单个任务改完，Harness² 会把这次采用的 Harness 和一份「经验笔记」存进 improvement library。下一个任务**仍然从原始 Harness 出发**——因为为上一个任务量身定做的改动，换个任务可能帮倒忙；但笔记可以传下去，告诉编辑器「什么招在什么情况下管用」。
 
 消融显示，拿掉经验库，WorkBuddy-Bench 掉 3.1 分、JobBench 掉 1.8 分。更有意思的是迁移：用 JobBench 积累的库去改 WorkBuddy-Bench，一轮改进也能涨分，而且不需要额外的探测。
 
 这就是论文标题里两个递归的含义：**任务级递归**改当前 Harness，**Harnessing 级递归**改「改 Harness 的方法」。
 
-###### 效果：不改权重，弱模型反超强模型
-***
+## 效果：不改权重，弱模型反超强模型
 主实验覆盖 3 个专业评测、4 种「模型 + Harness」组合：
 
 | 场景 | 原版 | Harness² | 提升 |
@@ -71,8 +66,7 @@ WorkBuddy-Bench 上，GLM-5 优化后 **75.7**，已经超过没改过的 Gemini
 
 一句话：**不动模型权重，只改外面那层「干活的方法」，弱模型可以反超强模型。**
 
-###### 代价和局限
-***
+## 代价和局限
 1. **算力不便宜**。每个任务要多跑多轮候选，预算 K 越大，token 和延迟越高。论文把它画在 compute–performance 的 Pareto 前沿上，但前沿本身就很贵。
 2. **行为证据 ≠ 结果正确**。Probe 只能证明「做法变了」，不能证明「答案对了」。给足预算时，选择器可能在一堆结果里挑中 55 分、扔掉 95 分。
 3. **提升有一部分来自更强的编辑器**。默认用 Claude Opus 4.8 改 Harness：Opus 改 GLM-5 涨 **11.05** 分，GLM-5 自己改自己只涨 **4.01** 分。不过在 LAB 上，GLM-5 自改反而更好，说明结论依赖领域。
@@ -80,8 +74,7 @@ WorkBuddy-Bench 上，GLM-5 优化后 **75.7**，已经超过没改过的 Gemini
 
 ![这是图片](/images/2026-10-30-Harness2/same_model.webp "Same Model as Executor and Editor")
 
-###### 本质：换了一个验证哲学
-***
+## 本质：换了一个验证哲学
 把 Harness² 放回 Harness 自进化的脉络里，它的位置很清楚。
 
 Meta-Harness、Self-Harness 的核心是「结果驱动」：先有分数，再决定去留。Harness² 的核心是「过程驱动」：没有分数，就对比行为，用执行轨迹里的证据决定改什么、留什么。
@@ -94,8 +87,7 @@ Meta-Harness、Self-Harness 的核心是「结果驱动」：先有分数，再�
 代码：<https://github.com/google-research/harness2>  
 项目页：<https://harness2.github.io>
 
-###### Citation
-***
+## Citation
 Please cite this work as:
 Claire. "Harness 优化/自进化 (01): Harness² and Self-Evolution without a Scorer". Claire-notes (Oct 2026). https://claire-notes.github.io/Harness-RSI-Harness2
 
@@ -109,4 +101,3 @@ Claire. "Harness 优化/自进化 (01): Harness² and Self-Evolution without a S
   url = "https://claire-notes.github.io/Harness-RSI-Harness2"
 }
 ```
-***
