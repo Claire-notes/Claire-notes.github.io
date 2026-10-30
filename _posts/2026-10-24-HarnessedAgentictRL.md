@@ -28,11 +28,11 @@ title: Harnessed Agentic RL (01)
 
 ###### Pattern1: 🔹 veRL（Seed, 2025）
 ***
-![这是图片](/images/2026-10-25-HarnessedAgenticRL/veRL.png "veRL Framework")
+![这是图片](/images/2026-10-25-HarnessedAgenticRL/veRL.webp "veRL Framework")
 
 ###### Pattern2: 🔹 Molt （NVIDIA NeMo，2026.07）
 ***
-![这是图片](/images/2026-10-25-HarnessedAgenticRL/molt.jpeg "Molt Framework")
+![这是图片](/images/2026-10-25-HarnessedAgenticRL/molt.webp "Molt Framework")
 
 **传统Agent RL的3大问题**  
 - **训练-部署不一致**​​：训练时看到的 prompt 和部署时模型实际看到的 prompt 可能不同
@@ -53,7 +53,7 @@ title: Harnessed Agentic RL (01)
 
 ###### Pattern1: 🔹 Polar （NVIDIA，2026.05）
 ***
-![这是图片](/images/2026-10-25-HarnessedAgenticRL/polar.jpeg "Polar Framework")
+![这是图片](/images/2026-10-25-HarnessedAgenticRL/polar.webp "Polar Framework")
 **是Harnessed Agentic RL的开创工作。**
 - ​​核心设计​​：LLM-endpoint Proxy，记录推理引擎的原始tokenIDs和nodeProb，不做decode-encode。两种方式做轨迹重建：per-request和 **prefix-merging （约5.4倍加速）**。  
 - ​​Rollout架构​​：Rollout Server 负责异步调度，Gateway Node 负责实际执行和工具调用。  
@@ -69,7 +69,7 @@ Polar 解决了"怎么观察"的问题，但没有处理后续的训练挑战—
 
 ###### Pattern2: 🔹 Agent LightningV1.0（微软，2026.08）  
 ***
-![这是图片](/images/2026-10-25-HarnessedAgenticRL/agentlightning.jpeg "Polar Framework")
+![这是图片](/images/2026-10-25-HarnessedAgenticRL/agentlightning.webp "Polar Framework")
 
 **和Polar架构路线一致，框架更轻量级，训练系统优化更详细。**
 - ​​核心设计​​：API Gateway 中的 LLM Proxy 拦截记录请求，但和 Polar 不同，Agent Lightning 在 Gateway 层主要做了统一Chat-template。
@@ -79,7 +79,7 @@ Polar 解决了"怎么观察"的问题，但没有处理后续的训练挑战—
 
 ###### Pattern3: 🔹 OpenForgeRL（微软 / 哥伦比亚，2026.07）
 ***
-![这是图片](/images/2026-10-25-HarnessedAgenticRL/OpenForge.jpeg "OpenForge Framework")
+![这是图片](/images/2026-10-25-HarnessedAgenticRL/OpenForge.webp "OpenForge Framework")
 **Trainer、Rollout、Agent结构分离，理论上可以训练任何agent。**
 - 核心设计：API Gateway拦截Harness的LLM调用，路由到RL推理引擎并记录轨迹。
 - Rollout Orchestrator：启动远程沙箱Harness与环境进行交互并调用LLM，ProxyServer拦截LLM调用、路由至推理引擎、记录轨迹。
@@ -93,7 +93,7 @@ Polar 解决了"怎么观察"的问题，但没有处理后续的训练挑战—
 
 ###### Case Study & 一些实验
 ***
-![这是图片](/images/2026-10-25-HarnessedAgenticRL/exp.jpeg "Exp Result")
+![这是图片](/images/2026-10-25-HarnessedAgenticRL/exp.webp "Exp Result")
 
 ###### Future Challenges
 ***
