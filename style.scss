@@ -19,13 +19,14 @@ html {
 
 body {
 	background: $white;
-  font: 18px/1.4 $helvetica;
+  font: 17px/1.75 $helvetica;
   color: $darkGray;
+  -webkit-font-smoothing: antialiased;
 }
 
 .container {
   margin: 0 auto;
-  max-width: 740px;
+  max-width: 720px;
   padding: 0 10px;
   width: 100%;
 }
@@ -151,7 +152,7 @@ img {
 //
 
 .wrapper-masthead {
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 
 .masthead {
@@ -195,15 +196,14 @@ img {
   color: $darkGray;
   cursor: pointer;
   font-family: $helveticaNeue;
-  font-weight: 300;
-  font-size: 28px;
-  letter-spacing: 1px;
+  font-weight: 600;
+  font-size: 26px;
 }
 
 .site-description {
-  margin: -5px 0 0 0;
+  margin: 2px 0 0 0;
   color: $gray;
-  font-size: 16px;
+  font-size: 15px;
 
   @include mobile {
     margin: 3px 0;
@@ -214,21 +214,25 @@ nav {
   float: right;
   margin-top: 23px; // @TODO: Vertically middle align
   font-family: $helveticaNeue;
-  font-size: 18px;
+  font-size: 16px;
 
   @include mobile {
     float: none;
     margin-top: 9px;
     display: block;
-    font-size: 16px;
+    font-size: 15px;
   }
 
   a {
     margin-left: 20px;
     color: $darkGray;
     text-align: right;
-    font-weight: 300;
-    letter-spacing: 1px;
+    font-weight: 400;
+
+    &:hover {
+      color: $blue;
+      text-decoration: none;
+    }
 
     @include mobile {
       margin: 0 10px;
@@ -257,22 +261,41 @@ nav {
   padding-bottom: 0.4em;
   border-bottom: 1px solid $lightGray;
   font-size: 22px;
-  font-weight: 400;
+  font-weight: 600;
   letter-spacing: 0.5px;
 }
 
+.posts {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .posts > .post {
-  padding-bottom: 2.4em;
-  border-bottom: none;
+  padding: 22px 24px;
+  border: 1px solid $lightGray;
+  border-radius: 8px;
+  background: $white;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: #ddd;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.06);
+  }
+
+  @include mobile {
+    padding: 18px 16px;
+  }
 }
 
 .posts > .post:last-child {
-  padding-bottom: 1em;
+  padding-bottom: 22px;
 }
 
 .post-title {
-  margin: 0 0 0.3em;
-  font-size: 22px;
+  margin: 0 0 0.35em;
+  font-size: 20px;
+  font-weight: 600;
   line-height: 1.5;
 
   a {
@@ -286,16 +309,16 @@ nav {
 }
 
 .post-meta {
-  margin: 0 0 0.6em;
+  margin: 0 0 0.7em;
   color: $gray;
-  font-size: 15px;
-  letter-spacing: 0.3px;
+  font-size: 14px;
+  letter-spacing: 0.2px;
 }
 
 .post-excerpt {
   margin: 0;
   color: $darkGray;
-  font-size: 17px;
+  font-size: 16px;
   line-height: 1.75;
 }
 
@@ -320,14 +343,13 @@ nav {
 }
 
 .wrapper-footer {
-  margin-top: 50px;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-  background-color: $lightGray;
+  margin-top: 60px;
+  border-top: 1px solid $lightGray;
+  background-color: transparent;
 }
 
 footer {
-  padding: 20px 0;
+  padding: 24px 0;
   text-align: center;
 }
 
