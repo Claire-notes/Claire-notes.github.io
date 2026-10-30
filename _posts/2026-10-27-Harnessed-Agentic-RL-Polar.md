@@ -37,7 +37,7 @@ Polar 的 correctness 准则：
 
 结果是：轨迹变长、样本变少，但每个参与训练的 token 都「确实发生过」。这也是 Polar 与「把日志拼一拼」的本质区别。
 
-![这是图片](/images/2026-10-27-Nvidia-Polar/traj_build.png "Trajectory Reconstruction")
+![这是图片](/images/2026-10-27-Harnessed-Agentic-RL-Polar/traj_build.png "Trajectory Reconstruction")
 
 ###### 为这条不变量付出的系统代价
 ***
@@ -45,7 +45,7 @@ Token 保真不是免费的。它要求代理、运行时、评测都在同一�
 
 Gateway 内部把生命周期拆成四段 worker pool：INIT（起容器、装依赖）、READY（预热好的 runtime 排队）、RUNNING（执行 Harness）、POSTRUN（重建轨迹、评测、回调、清理）。这样 CPU 密集的环境准备和长尾评测不会堵住 GPU 上的 Agent 执行；session 超时后也仍然进入 POSTRUN，把已经捕获的部分轨迹抢救回来。
 
-![这是图片](/images/2026-10-27-Nvidia-Polar/polar_arch.png "Polar Architecture")
+![这是图片](/images/2026-10-27-Harnessed-Agentic-RL-Polar/polar_arch.png "Polar Architecture")
 
 训练框架因此可以完全独立：Slime 只需要提交任务、接回调、把 trace 转成 Sample。Polar 不替代 trainer，它只提供「可训练的轨迹」这一层底座。
 
@@ -66,7 +66,7 @@ Gateway 内部把生命周期拆成四段 worker pool：INIT（起容器、装�
 
 效率上，同样三步训练，`prefix_merging` 把 trainer 更新从 1,185 条压到 218 条，耗时从 189.5 分钟降到 35.2 分钟（5.39x），rollout GPU 利用率从 20.4% 提到 87.7%。离线场景也能复用：Qwen3.5-122B-A10B 在 pi harness 上跑 1,638 次，按 SWE-Bench 测试过滤后留下 504 条（30.8%），约 64 GPU-hours。
 
-![这是图片](/images/2026-10-27-Nvidia-Polar/prefix_merging_vs_per_request_gpu.png "GPU Utilization")
+![这是图片](/images/2026-10-27-Harnessed-Agentic-RL-Polar/prefix_merging_vs_per_request_gpu.png "GPU Utilization")
 
 ###### Polar 放弃了什么
 ***
