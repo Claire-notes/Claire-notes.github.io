@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Harnessed Agentic RL (01)
+excerpt: "Agent = LLM + Harness。这篇拆解 Harness 的构成：它如何决定模型怎么思考规划、调用工具、管理上下文，以及为什么它正在成为 Agent 落地的关键变量。"
 ---
 ###### Harnessed Agentic RL产生的背景 
 ***

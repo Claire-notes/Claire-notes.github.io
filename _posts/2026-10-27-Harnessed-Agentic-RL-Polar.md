@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Harnessed Agentic RL (02)：Polar 与重新定义的「样本」"
+excerpt: "Polar 常被概括成一句「API 代理」，但它真正解决的是训练样本：如何在不打开 Harness 的前提下，把一次 Agent 运行还原成 token 级保真轨迹，让黑盒训练在数学上成立。"
 ---
 
 ###### 一个容易误解的点：Polar 不只是 API Proxy
