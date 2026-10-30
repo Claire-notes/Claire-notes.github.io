@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Harnessed Agentic RL (01)
+title: Harnessed Agentic RL：范式总览
 excerpt: "Agent = LLM + Harness。这篇拆解 Harness 的构成：它如何决定模型怎么思考规划、调用工具、管理上下文，以及为什么它正在成为 Agent 落地的关键变量。"
 ---
 ## Harnessed Agentic RL产生的背景 
@@ -97,12 +97,12 @@ Polar 解决了"怎么观察"的问题，但没有处理后续的训练挑战—
 
 ## Citation
 Please cite this work as:
-Claire. “Harnessed Agentic RL Optimization”. Claire-notes (Oct 2026). https://claire-notes.github.io/HarnessedAgentictRL
+Claire. "Harnessed Agentic RL: An Overview". Claire-notes (Oct 2026). https://claire-notes.github.io/HarnessedAgentictRL
 
 Or use the BibTeX citation:
-```json
-{@article{Claire-HarnessAgenticRL,
-  title = {Harnessed Agentic RL},
+```bibtex
+@article{Claire-HarnessAgenticRL,
+  title = {Harnessed Agentic RL: An Overview},
   author = {Claire (qingYe)},
   journal = {claire-notes.github.io},
   year = {2026},
