@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Harnessed Agentic RL (02)：Polar 与重新定义的「样本」"
+title: "Harnessed Agentic RL：Polar 与黑盒 RL"
 excerpt: "Polar 常被概括成一句「API 代理」，但它真正解决的是训练样本：如何在不打开 Harness 的前提下，把一次 Agent 运行还原成 token 级保真轨迹，让黑盒训练在数学上成立。"
 ---
 
@@ -78,15 +78,16 @@ Polar 的贡献不是「多了一个兼容层」，而是证明了：只要样�
 
 ## Citation
 Please cite this work as:
-Claire. "Harnessed Agentic RL (02): Polar". Claire-notes (Oct 2026). https://claire-notes.github.io/Nvidia-Polar
+Claire. "Harnessed Agentic RL: Polar and Black-box RL". Claire-notes (Oct 2026). https://claire-notes.github.io/Harnessed-Agentic-RL-Polar
 
-```json
-{@article{Claire-HarnessAgenticRL-02,
-  title = {Polar and the Redefinition of Samples},
+Or use the BibTeX citation:
+```bibtex
+@article{Claire-HarnessAgenticRL-Polar,
+  title = {Harnessed Agentic RL: Polar and Black-box RL},
   author = {Claire (qingYe)},
   journal = {claire-notes.github.io},
   year = {2026},
   month = {October},
-  url = "https://claire-notes.github.io/Nvidia-Polar"
+  url = "https://claire-notes.github.io/Harnessed-Agentic-RL-Polar"
 }
 ```

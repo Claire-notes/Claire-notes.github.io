@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Harness优化/自进化 (01)：Harness² 与「不用打分器」的自进化"
+title: "Harness 自进化：Harness² 免打分器改进"
 excerpt: "没有标准答案、没有人打分，Harness 怎么知道自己改得好不好？Harness² 用行为对比替代结果打分，把 Harness 自进化从「需要标准答案的实验室」推向真实工作场景。"
 ---
 
@@ -89,11 +89,12 @@ Meta-Harness、Self-Harness 的核心是「结果驱动」：先有分数，再�
 
 ## Citation
 Please cite this work as:
-Claire. "Harness 优化/自进化 (01): Harness² and Self-Evolution without a Scorer". Claire-notes (Oct 2026). https://claire-notes.github.io/Harness-RSI-Harness2
+Claire. "Harness Self-Evolution: Harness2 without a Scorer". Claire-notes (Oct 2026). https://claire-notes.github.io/Harness-RSI-Harness2
 
-```json
-{@article{Claire-HarnessRSI-01,
-  title = {Harness Optimization and Self-Evolution (01): Harness2 without a Scorer},
+Or use the BibTeX citation:
+```bibtex
+@article{Claire-HarnessSelfEvolution,
+  title = {Harness Self-Evolution: Harness2 without a Scorer},
   author = {Claire (qingYe)},
   journal = {claire-notes.github.io},
   year = {2026},
