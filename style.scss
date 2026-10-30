@@ -204,6 +204,7 @@ img {
   margin: 2px 0 0 0;
   color: $gray;
   font-size: 15px;
+  font-weight: 600;
 
   @include mobile {
     margin: 3px 0;
@@ -431,7 +432,7 @@ nav {
     }
 
     img.img-half {
-      width: 50%;
+      width: 40%;
     }
 
     table {
