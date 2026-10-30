@@ -89,9 +89,11 @@ Meta-Harness、Self-Harness 的核心是「结果驱动」：先有分数，再�
 
 ## Citation
 Please cite this work as:
-Claire. "Harness Self-Evolution: Harness2 Recursive Evolution". Claire-notes (Oct 2026). https://claire-notes.github.io/Harness-RSI-Harness2
+
+> Claire. "Harness Self-Evolution: Harness2 Recursive Evolution". Claire-notes (Oct 2026). https://claire-notes.github.io/Harness-RSI-Harness2
 
 Or use the BibTeX citation:
+
 ```bibtex
 @article{Claire-HarnessSelfEvolution,
   title = {Harness Self-Evolution: Harness2 Recursive Evolution},
