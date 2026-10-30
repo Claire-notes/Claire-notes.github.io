@@ -241,14 +241,62 @@ nav {
 // .main
 //
 
-.posts > .post {
-  padding-bottom: 2em;
+.intro {
+  margin-bottom: 2.5em;
+
+  p {
+    margin: 0;
+    color: $darkGray;
+    font-size: 18px;
+    line-height: 1.8;
+  }
+}
+
+.section-title {
+  margin: 0 0 1.2em;
+  padding-bottom: 0.4em;
   border-bottom: 1px solid $lightGray;
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+
+.posts > .post {
+  padding-bottom: 2.4em;
+  border-bottom: none;
 }
 
 .posts > .post:last-child {
   padding-bottom: 1em;
-  border-bottom: none;
+}
+
+.post-title {
+  margin: 0 0 0.3em;
+  font-size: 22px;
+  line-height: 1.5;
+
+  a {
+    color: $darkGray;
+
+    &:hover {
+      color: $blue;
+      text-decoration: none;
+    }
+  }
+}
+
+.post-meta {
+  margin: 0 0 0.6em;
+  color: $gray;
+  font-size: 15px;
+  letter-spacing: 0.3px;
+}
+
+.post-excerpt {
+  margin: 0;
+  color: $darkGray;
+  font-size: 17px;
+  line-height: 1.75;
 }
 
 .post {
