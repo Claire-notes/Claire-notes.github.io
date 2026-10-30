@@ -78,9 +78,11 @@ Polar 的贡献不是「多了一个兼容层」，而是证明了：只要样�
 
 ## Citation
 Please cite this work as:
-Claire. "Harnessed Agentic RL: Polar and Black-box RL". Claire-notes (Oct 2026). https://claire-notes.github.io/Harnessed-Agentic-RL-Polar
+
+> Claire. "Harnessed Agentic RL: Polar and Black-box RL". Claire-notes (Oct 2026). https://claire-notes.github.io/Harnessed-Agentic-RL-Polar
 
 Or use the BibTeX citation:
+
 ```bibtex
 @article{Claire-HarnessAgenticRL-Polar,
   title = {Harnessed Agentic RL: Polar and Black-box RL},

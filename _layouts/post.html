@@ -20,16 +20,10 @@ layout: default
   </div>
   <nav class="post-nav">
     {% if page.previous %}
-      <a class="post-nav-prev" href="{{ site.baseurl }}{{ page.previous.url }}">
-        <span>← 上一篇</span>
-        {{ page.previous.title }}
-      </a>
+      <a class="post-nav-prev" href="{{ site.baseurl }}{{ page.previous.url }}">← 上一篇</a>
     {% endif %}
     {% if page.next %}
-      <a class="post-nav-next" href="{{ site.baseurl }}{{ page.next.url }}">
-        <span>下一篇 →</span>
-        {{ page.next.title }}
-      </a>
+      <a class="post-nav-next" href="{{ site.baseurl }}{{ page.next.url }}">下一篇 →</a>
     {% endif %}
   </nav>
 

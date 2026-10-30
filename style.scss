@@ -333,6 +333,37 @@ nav {
   }
 }
 
+// 代码块：浅灰底、无阴影、深色等宽字（对齐 Lilian 的引用风格）
+.post .entry {
+  .highlight,
+  pre {
+    margin: 1.5em 0;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 6px;
+    background: #f5f5f5;
+    box-shadow: none;
+    overflow-x: auto;
+  }
+
+  .highlight pre {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+  }
+
+  code,
+  pre {
+    font-family: SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .highlight span {
+    color: #333;
+  }
+}
+
 .post {
   h1 {
     font-size: 30px;
@@ -477,8 +508,7 @@ nav {
   font-size: 14px;
 
   a {
-    max-width: 48%;
-    color: $darkGray;
+    color: $gray;
 
     &:hover {
       color: $blue;
@@ -486,16 +516,8 @@ nav {
     }
   }
 
-  span {
-    display: block;
-    margin-bottom: 3px;
-    color: $gray;
-    font-size: 12px;
-  }
-
   .post-nav-next {
     margin-left: auto;
-    text-align: right;
   }
 }
 
