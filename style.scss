@@ -19,8 +19,8 @@ html {
 
 body {
 	background: $white;
-  font: 17px/1.75 $helvetica;
-  color: $darkGray;
+  font: 16px/1.6 $helvetica;
+  color: #1f1f1f;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -251,7 +251,7 @@ nav {
   p {
     margin: 0;
     color: $darkGray;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1.8;
   }
 }
@@ -318,7 +318,7 @@ nav {
 .post-excerpt {
   margin: 0;
   color: $darkGray;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.75;
 }
 
