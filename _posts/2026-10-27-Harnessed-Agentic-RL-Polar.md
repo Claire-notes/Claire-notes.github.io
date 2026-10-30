@@ -64,6 +64,14 @@ Gateway 内部把生命周期拆成四段 worker pool：INIT（起容器、装�
 
 <img src="/images/2026-10-27-Harnessed-Agentic-RL-Polar/prefix_merging_vs_per_request_gpu.webp" alt="GPU Utilization" title="GPU Utilization" style="width: 70%;" />
 
+![方案 A：时间轴对比](/images/2026-10-27-Harnessed-Agentic-RL-Polar/prefix_merging_concept.webp "方案 A")
+
+*方案 A（备选）：同一工作负载，两种执行模式的时间轴对比。*
+
+![方案 B：手绘风曲线](/images/2026-10-27-Harnessed-Agentic-RL-Polar/prefix_merging_redraw.webp "方案 B")
+
+*方案 B（备选）：手绘风重绘，曲线为近似示意。*
+
 ## Polar 放弃了什么
 把 Harness 当黑盒，换来的是行为保真，代价是环境透明。代理只能看到模型调用，看不到 Harness 内部的状态迁移、工具副作用和中间决策；需要 dense process reward 的任务，仅靠 token 流量很难还原。
 
