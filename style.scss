@@ -18,7 +18,7 @@ html {
 }
 
 body {
-	background: $white;
+	background: #f7f7f7;
   font: 16px/1.6 $helvetica;
   color: #1f1f1f;
   -webkit-font-smoothing: antialiased;
@@ -320,6 +320,17 @@ nav {
   color: $gray;
   font-size: 14px;
   line-height: 1.75;
+}
+
+.post-single {
+  padding: 32px 36px;
+  border: 1px solid $lightGray;
+  border-radius: 10px;
+  background: $white;
+
+  @include mobile {
+    padding: 22px 18px;
+  }
 }
 
 .post {
