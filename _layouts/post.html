@@ -10,7 +10,10 @@ layout: default
     {{ page.date | date: "%Y-%m-%d" }} · {{ chars | divided_by: 400 | plus: 1 }} min read
   </p>
 
-  <nav class="toc" id="toc" hidden></nav>
+  <details class="toc" id="toc" hidden>
+    <summary>目录</summary>
+    <div class="inner"></div>
+  </details>
 
   <div class="entry" id="post-content">
     {{ content }}
@@ -43,30 +46,34 @@ layout: default
 
   var headings = content.querySelectorAll('h2[id], h3[id]');
 
-  // 标题锚点
-  headings.forEach(function (h) {
-    var a = document.createElement('a');
-    a.className = 'heading-anchor';
-    a.href = '#' + h.id;
-    a.setAttribute('aria-hidden', 'true');
-    a.textContent = '#';
-    h.appendChild(a);
-  });
-
-  // 目录
+  // 目录（可折叠，h3 嵌套在 h2 下）
   var toc = document.getElementById('toc');
   if (toc && headings.length > 1) {
-    var ul = document.createElement('ul');
+    var inner = toc.querySelector('.inner');
+    var root = document.createElement('ul');
+    var currentH2 = null;
+
     headings.forEach(function (h) {
       var li = document.createElement('li');
-      li.className = h.tagName === 'H3' ? 'toc-h3' : 'toc-h2';
       var a = document.createElement('a');
       a.href = '#' + h.id;
       a.textContent = h.childNodes[0].textContent.trim();
       li.appendChild(a);
-      ul.appendChild(li);
+
+      if (h.tagName === 'H2' || !currentH2) {
+        root.appendChild(li);
+        currentH2 = li;
+      } else {
+        var sub = currentH2.querySelector('ul');
+        if (!sub) {
+          sub = document.createElement('ul');
+          currentH2.appendChild(sub);
+        }
+        sub.appendChild(li);
+      }
     });
-    toc.appendChild(ul);
+
+    inner.appendChild(root);
     toc.hidden = false;
   }
 

@@ -395,25 +395,51 @@ nav {
 
 .toc {
   margin: 0 0 2em;
-  padding: 12px 16px;
+  padding: 10px 16px;
   border: 1px solid $lightGray;
   border-radius: 8px;
   background: #fafafa;
   font-size: 14px;
 
+  summary {
+    padding: 4px 0;
+    color: $gray;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::before {
+      content: "▸";
+      display: inline-block;
+      margin-right: 6px;
+      transition: transform 0.15s ease;
+    }
+  }
+
+  &[open] summary {
+    margin-bottom: 6px;
+
+    &::before {
+      transform: rotate(90deg);
+    }
+  }
+
+  .inner {
+    padding-left: 4px;
+  }
+
   ul {
     margin: 0;
-    padding-left: 1.1em;
+    padding-left: 1.2em;
   }
 
   li {
-    margin: 0.3em 0;
+    margin: 0.25em 0;
     line-height: 1.6;
-  }
-
-  .toc-h3 {
-    margin-left: 0.8em;
-    list-style: circle;
   }
 
   a {
@@ -427,26 +453,6 @@ nav {
 
   &[hidden] {
     display: none;
-  }
-}
-
-.post .entry {
-  h2,
-  h3 {
-    position: relative;
-  }
-
-  .heading-anchor {
-    margin-left: 0.35em;
-    color: transparent;
-    font-weight: 400;
-    text-decoration: none;
-    transition: color 0.15s ease;
-  }
-
-  h2:hover .heading-anchor,
-  h3:hover .heading-anchor {
-    color: #ccc;
   }
 }
 
