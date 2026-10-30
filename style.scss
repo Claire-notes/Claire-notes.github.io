@@ -508,8 +508,7 @@ nav {
   font-size: 14px;
 
   a {
-    max-width: 48%;
-    color: $darkGray;
+    color: $gray;
 
     &:hover {
       color: $blue;
@@ -517,16 +516,8 @@ nav {
     }
   }
 
-  span {
-    display: block;
-    margin-bottom: 3px;
-    color: $gray;
-    font-size: 12px;
-  }
-
   .post-nav-next {
     margin-left: auto;
-    text-align: right;
   }
 }
 
