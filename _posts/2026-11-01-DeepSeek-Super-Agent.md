@@ -6,19 +6,15 @@ excerpt: "一个人的注意力只能同时跟进三五个 Session，这就是�
 ---
 
 <div class="callout">
-<p>看到 DeepSeek Super-agent 的 Router + Worker 设计，跟我 6 月在 AI 搜上设计的 Router 思路一致。DS 工程化做得比我们深，但技术判断我们更早 4 个月。</p>
-<p>不过在 6 月份 AI 搜 Router 只上线了简单版 1.0，2.0 的设计因为意外事件没来得及 show 完整 tech design。更好的做法是：</p>
+<p>DeepSeek Super-agent 的 Router + Worker 设计，和我 6 月在 AI 搜上做的那版 Router 撞了思路。DS 把工程化做得更深，这点得认；但技术判断上，我们早了 4 个月。</p>
+<p>当时 AI 搜的 Router 只上线了简单版 1.0，2.0 的设计因为一次意外事件，没能完整展开。原本的设想大致是这样：</p>
 <ol>
-<li><strong>入口处</strong>：Router 给 Worker（下游）Guidance（搜不搜、toollist、模型档、上下文策略），执行由 Worker 自己跑。</li>
-<li><strong>过程中</strong>：Router 加 Watchdog 防止 Worker（ReAct or other）跑偏，观察流触发，跑偏才介入。</li>
-<li><strong>全程</strong>：Router 要隔离摘要，控制自己开销在搜索总延迟 5–10% 内。</li>
+<li><strong>入口处</strong>：Router 只下发 Guidance——搜不搜、工具清单、模型档位、上下文策略，具体执行交给 Worker 自己跑。</li>
+<li><strong>过程中</strong>：Router 侧挂 Watchdog，由观察流触发，Worker 跑偏了才介入。</li>
+<li><strong>全程</strong>：Router 自己负责隔离与摘要，并把开销压在搜索总延迟的 5–10% 以内。</li>
 </ol>
-<p>理念和 DS Super-agent 一致：</p>
-<ol>
-<li>Router 只派活不干活、先轻后重、摘要回传、不当性能瓶颈。</li>
-<li>和 DS 差异：AI 搜要速度快，DS 的长任务 / 大会话 / 异步批处理是产品差异带来的技术差异。</li>
-</ol>
-<p>方向没跑偏，大家技术判断整体是一致的。</p>
+<p>和 DS 一致的地方：Router 只派活不干活、先轻后重、摘要回传、不做性能瓶颈。不同的地方在场景——AI 搜要的是快，DS 面对的是长任务、大会话和异步批处理，产品形态不同，技术取舍自然不同。</p>
+<p>方向没跑偏。判断是对的，差的是工程投入和落地速度。</p>
 </div>
 
 ## 问题：多任务的上限卡在了人的注意力
