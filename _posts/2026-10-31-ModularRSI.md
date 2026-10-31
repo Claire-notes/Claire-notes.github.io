@@ -5,8 +5,9 @@ series: harness-rsi
 excerpt: "Harness 自改进的难点不是「要不要改」，而是「改哪个模块」。ModularRSI 把 harness 拆成五块，用成功与失败的轨迹对比定位缺陷，再过三道门才允许合并。"
 ---
 
-## 问题：改 Harness 不难，难的是改对地方
 ModularRSI：Modular and Generalizable Recursive Harness Self-Improvement
+
+## 问题：改 Harness 不难，难的是改对地方
 
 Harness 自进化已经被证明有效，但现有方法普遍踩三个坑：
 
