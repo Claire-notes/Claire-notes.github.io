@@ -1,7 +1,6 @@
 ---
 layout: post
 title: "Agent 架构 (01)：DeepSeek Super-agent 的多任务设计"
-date: 2026-11-01 01:00:00 +0800
 excerpt: "一个人的注意力只能同时跟进三五个 Session，这就是多任务的天花板。DeepSeek 的解法是把 Agent 从会话里解绑：Router 调度、Worker 执行、事件驱动、上下文分层落盘。"
 ---
 

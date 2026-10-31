@@ -56,6 +56,12 @@ baseurl: ""
 
 permalink: /:title/
 
+# 全站按北京时间处理文章日期（默认是 UTC）
+timezone: Asia/Shanghai
+
+# 即使日期落在构建时间之后也照常构建，避免文章被静默丢弃
+future: true
+
 # The release of Jekyll Now that you're using
 version: v1.2.0
 
