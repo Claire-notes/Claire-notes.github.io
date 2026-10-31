@@ -15,7 +15,7 @@ excerpt: "一个人的注意力只能同时跟进三五个 Session，这就是�
 </ol>
 <p>和 DeepSeek 一致的点：Router 只派活不干活、先轻后重、摘要回传、自身不能成为性能瓶颈。</p>
 <p>和 DeepSeek 差异的点：在场景——AI 搜要的是快又好，DS 面对的是长任务、大会话和异步批处理（速度有容忍度），产品形态差异带来技术设计差异。</p>
-<p>总结：Router 架构方向是对的，技术趋势判断 / 架构也是对的。</p>
+<p><strong>总结：Router 架构方向是对的，技术趋势判断 / 架构也是对的。</strong></p>
 </div>
 
 DeepSeek：Super-agent 设计探索，迈向更自主的 Agent 系统
