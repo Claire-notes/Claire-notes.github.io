@@ -7,6 +7,8 @@ excerpt: "Harness 自改进的难点不是「要不要改」，而是「改哪�
 
 ModularRSI：Modular and Generalizable Recursive Harness Self-Improvement
 
+<div id="toc-slot"></div>
+
 ## 问题：改 Harness 不难，难的是改对地方
 
 Harness 自进化已经被证明有效，但现有方法普遍踩三个坑：
