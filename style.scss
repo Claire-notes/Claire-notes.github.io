@@ -326,9 +326,9 @@ nav {
 
 // 系列配色：莫兰迪色系（边框 / 文字 / 标签底）
 $series-colors: (
-  "harnessed-rl": (#a3b5c6, #566b7d, #eef2f5),
-  "harness-rsi": (#a9b8a4, #5f7159, #eff2ed),
-  "agent-arch": (#cbb0a4, #86675b, #f4eeea)
+  "harnessed-rl": (#7f95a9, #42576a, #e7edf2),
+  "harness-rsi": (#869a80, #4a5e45, #e9efe6),
+  "agent-arch": (#b59487, #745146, #f0e7e2)
 );
 
 @each $name, $palette in $series-colors {
@@ -373,15 +373,16 @@ $series-colors: (
 
 .series-tag {
   display: inline-block;
-  margin-bottom: 8px;
-  padding: 1px 9px;
+  margin-left: 8px;
+  padding: 0 8px;
   border: 1px solid $lightGray;
   border-radius: 999px;
   background: #f5f5f5;
   color: $gray;
   font-size: 12px;
-  line-height: 1.7;
+  line-height: 1.6;
   letter-spacing: 0.2px;
+  vertical-align: 1px;
 }
 
 .post-single {
