@@ -145,7 +145,7 @@ Super-agent 的核心转变，是把 Agent 的组织单位从「对话」升级�
 
 一句话总结：**未来 Agent 的竞争焦点正在从「谁更聪明」转向「谁更可靠」——能持续、稳定、自主完成工作的系统，比只会聊天但需要人盯着的系统更有生产力价值。**
 
-原文：DeepSeek《Super-agent 设计探索：迈向更自主的 Agent 系统》
+原文：<https://zhuanlan.zhihu.com/p/2099987320443237060>（DeepSeek《Super-agent 设计探索：迈向更自主的 Agent 系统》）
 
 ## Citation
 Please cite this work as:
