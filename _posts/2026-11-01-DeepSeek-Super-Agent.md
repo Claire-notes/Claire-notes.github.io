@@ -5,6 +5,22 @@ series: agent-arch
 excerpt: "一个人的注意力只能同时跟进三五个 Session，这就是多任务的天花板。DeepSeek 的解法是把 Agent 从会话里解绑：Router 调度、Worker 执行、事件驱动、上下文分层落盘。"
 ---
 
+<div class="callout">
+<p>看到 DeepSeek Super-agent 的 Router + Worker 设计，跟我 6 月在 AI 搜上设计的 Router 思路一致。DS 工程化做得比我们深，但技术判断我们更早 4 个月。</p>
+<p>不过 AI 搜 Router 2.0 没做完…更好的是：</p>
+<ol>
+<li><strong>入口处</strong>：Router 给 Worker（下游）Guidance（搜不搜、toollist、模型档、上下文策略），执行由 Worker 自己跑。</li>
+<li><strong>过程中</strong>：Router 加 Watchdog 防止 Worker（ReAct or other）跑偏，观察流触发，跑偏才介入。</li>
+<li><strong>全程</strong>：Router 要隔离摘要，控制自己开销在搜索总延迟 5–10% 内。</li>
+</ol>
+<p>理念和 DS Super-agent 一致：</p>
+<ol>
+<li>Router 只派活不干活、先轻后重、摘要回传、不当性能瓶颈。</li>
+<li>和 DS 差异：AI 搜要速度快，DS 的长任务 / 大会话 / 异步批处理是产品差异带来的技术差异。</li>
+</ol>
+<p>方向没跑偏，大家技术判断整体是一致的。</p>
+</div>
+
 ## 问题：多任务的上限卡在了人的注意力
 DeepSeek：Super-agent 设计探索，迈向更自主的 Agent 系统
 

@@ -385,6 +385,37 @@ $series-colors: (
   vertical-align: 1px;
 }
 
+// 文内高亮框（作者旁注）
+.callout {
+  margin: 0 0 2em;
+  padding: 18px 20px;
+  border: 1px solid #e6ddd2;
+  border-left: 3px solid #b59487;
+  border-radius: 8px;
+  background: #faf6f1;
+  color: $darkGray;
+  font-size: 15px;
+  line-height: 1.75;
+
+  p {
+    margin: 0 0 0.8em;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  ol {
+    margin: 0 0 0.8em;
+    padding-left: 1.3em;
+    list-style: decimal;
+  }
+
+  li {
+    margin: 0.3em 0;
+  }
+}
+
 .post-single {
   padding: 32px 36px;
   border: 1px solid $lightGray;
