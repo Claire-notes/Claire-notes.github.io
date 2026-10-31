@@ -7,7 +7,7 @@ excerpt: "一个人的注意力只能同时跟进三五个 Session，这就是�
 
 <div class="callout">
 <p>看到 DeepSeek Super-agent 的 Router + Worker 设计，跟我 6 月在 AI 搜上设计的 Router 思路一致。DS 工程化做得比我们深，但技术判断我们更早 4 个月。</p>
-<p>不过 AI 搜 Router 2.0 没做完…更好的是：</p>
+<p>不过在 6 月份 AI 搜 Router 只上线了简单版 1.0，2.0 的设计因为意外事件没来得及 show 完整 tech design。更好的做法是：</p>
 <ol>
 <li><strong>入口处</strong>：Router 给 Worker（下游）Guidance（搜不搜、toollist、模型档、上下文策略），执行由 Worker 自己跑。</li>
 <li><strong>过程中</strong>：Router 加 Watchdog 防止 Worker（ReAct or other）跑偏，观察流触发，跑偏才介入。</li>
