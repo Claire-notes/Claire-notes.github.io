@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Harness 自进化 (03)：ModularRSI 的模块化拆分"
+series: harness-rsi
 excerpt: "Harness 自改进的难点不是「要不要改」，而是「改哪个模块」。ModularRSI 把 harness 拆成五块，用成功与失败的轨迹对比定位缺陷，再过三道门才允许合并。"
 ---
 

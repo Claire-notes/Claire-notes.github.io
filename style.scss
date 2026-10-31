@@ -275,6 +275,7 @@ nav {
 .posts > .post {
   padding: 22px 24px;
   border: 1px solid $lightGray;
+  border-left-width: 3px;
   border-radius: 8px;
   background: $white;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -321,6 +322,42 @@ nav {
   color: $gray;
   font-size: 14px;
   line-height: 1.75;
+}
+
+// 系列配色：每个系列一个强调色
+$series-colors: (
+  "harnessed-rl": #4a90e2,
+  "harness-rsi": #2f9e44,
+  "agent-arch": #e8590c
+);
+
+@each $name, $color in $series-colors {
+  .series-#{$name} {
+    border-left-color: $color;
+
+    .post-meta {
+      color: $color;
+    }
+
+    .post-title a:hover {
+      color: $color;
+    }
+  }
+}
+
+@each $name, $color in $series-colors {
+  .post-single.series-#{$name} {
+    border-top-width: 3px;
+    border-top-color: $color;
+
+    .post-meta {
+      color: $color;
+    }
+
+    .toc summary {
+      color: $color;
+    }
+  }
 }
 
 .post-single {
