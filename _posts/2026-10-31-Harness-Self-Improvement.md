@@ -6,7 +6,7 @@ excerpt: "模型直接改权重还太远，真正的近路在模型外面那层�
 ---
 
 ## 问题：RSI 的「模型改权重」路线太远
-这篇解读的是 Lilian Weng 2026 年 7 月的长文《Harness Engineering for Self-Improvement》。
+这篇解读的是《Harness Engineering for Self-Improvement》。
 
 递归自我改进（Recursive Self-Improvement，RSI）的概念可以追溯到 1965 年 I. J. Good 对「超级智能机器」的定义——一台能在所有智力活动中超越人类、并能设计出更好机器的机器。Yudkowsky（2008）进一步把 RSI 描述成一个反馈循环：AI 用当前智能去改进产生其智能的认知机制。
 
