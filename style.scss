@@ -324,44 +324,64 @@ nav {
   line-height: 1.75;
 }
 
-// 系列配色：每个系列一个强调色
+// 系列配色：莫兰迪色系（边框 / 文字 / 标签底）
 $series-colors: (
-  "harnessed-rl": #4a90e2,
-  "harness-rsi": #2f9e44,
-  "agent-arch": #e8590c
+  "harnessed-rl": (#a3b5c6, #566b7d, #eef2f5),
+  "harness-rsi": (#a9b8a4, #5f7159, #eff2ed),
+  "agent-arch": (#cbb0a4, #86675b, #f4eeea)
 );
 
-@each $name, $color in $series-colors {
+@each $name, $palette in $series-colors {
+  $edge: nth($palette, 1);
+  $ink: nth($palette, 2);
+
   .series-#{$name} {
-    border-left-color: $color;
+    border-left-color: $edge;
 
     .post-meta {
-      color: $color;
+      color: $ink;
     }
 
     .post-title a {
-      color: $color;
+      color: $ink;
     }
   }
-}
 
-@each $name, $color in $series-colors {
   .post-single.series-#{$name} {
     border-top-width: 3px;
-    border-top-color: $color;
+    border-top-color: $edge;
 
     h1 {
-      color: $color;
+      color: $ink;
     }
 
     .post-meta {
-      color: $color;
+      color: $ink;
     }
 
     .toc summary {
-      color: $color;
+      color: $ink;
     }
   }
+
+  .series-tag--#{$name} {
+    background: nth($palette, 3);
+    border-color: $edge;
+    color: $ink;
+  }
+}
+
+.series-tag {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 1px 9px;
+  border: 1px solid $lightGray;
+  border-radius: 999px;
+  background: #f5f5f5;
+  color: $gray;
+  font-size: 12px;
+  line-height: 1.7;
+  letter-spacing: 0.2px;
 }
 
 .post-single {

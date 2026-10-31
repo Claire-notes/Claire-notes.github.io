@@ -11,6 +11,8 @@ layout: default
     {% assign chars = post.content | strip_html | size %}
     <article class="post{% if post.series %} series-{{ post.series }}{% endif %}">
 
+      {% include series-tag.html series=post.series %}
+
       <h3 class="post-title"><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h3>
 
       <p class="post-meta">
