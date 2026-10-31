@@ -62,13 +62,13 @@ Gateway 内部把生命周期拆成四段 worker pool：INIT（起容器、装�
 
 效率上，同样三步训练，`prefix_merging` 把 trainer 更新从 1,185 条压到 218 条，耗时从 189.5 分钟降到 35.2 分钟（5.39x），rollout GPU 利用率从 20.4% 提到 87.7%。离线场景也能复用：Qwen3.5-122B-A10B 在 pi harness 上跑 1,638 次，按 SWE-Bench 测试过滤后留下 504 条（30.8%），约 64 GPU-hours。
 
-![方案 B：手绘风曲线](/images/2026-10-27-Harnessed-Agentic-RL-Polar/prefix_merging_redraw.webp "方案 B")
+![GPU 利用率：两种执行模式对比](/images/2026-10-27-Harnessed-Agentic-RL-Polar/prefix_merging_redraw.webp "GPU 利用率")
 
-*方案 B：手绘风重绘，曲线为近似示意。*
+*上：trainer GPU 利用率；下：rollout GPU 利用率。曲线为近似示意。*
 
-![方案 A：时间轴对比](/images/2026-10-27-Harnessed-Agentic-RL-Polar/prefix_merging_concept.webp "方案 A")
+![同一工作负载的耗时对比](/images/2026-10-27-Harnessed-Agentic-RL-Polar/prefix_merging_concept.webp "耗时对比")
 
-*方案 A：同一工作负载，两种执行模式的时间轴对比。*
+*同一工作负载，`prefix_merging` 把训练耗时从 189.5 分钟压到 35.2 分钟。*
 
 ## Polar 放弃了什么
 把 Harness 当黑盒，换来的是行为保真，代价是环境透明。代理只能看到模型调用，看不到 Harness 内部的状态迁移、工具副作用和中间决策；需要 dense process reward 的任务，仅靠 token 流量很难还原。
