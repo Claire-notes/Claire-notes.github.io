@@ -3,6 +3,8 @@ layout: default
 ---
 
 <article class="post post-single{% if page.series %} series-{{ page.series }}{% endif %}">
+  {% include series-tag.html series=page.series %}
+
   <h1>{{ page.title }}</h1>
 
   {% assign chars = page.content | strip_html | size %}
