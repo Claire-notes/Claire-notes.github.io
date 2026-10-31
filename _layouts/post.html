@@ -68,6 +68,9 @@ layout: default
 
     inner.appendChild(root);
     toc.hidden = false;
+
+    var slot = document.getElementById('toc-slot');
+    if (slot) slot.appendChild(toc);
   }
 
   // 返回顶部
