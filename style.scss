@@ -350,6 +350,10 @@ $series-colors: (
     border-top-width: 3px;
     border-top-color: $color;
 
+    h1 {
+      color: $color;
+    }
+
     .post-meta {
       color: $color;
     }
