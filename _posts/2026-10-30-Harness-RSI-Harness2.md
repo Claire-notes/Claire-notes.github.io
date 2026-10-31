@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Harness 自进化：Harness² 递归进化"
+title: "Harness 自进化 (01)：Harness² 递归进化"
 excerpt: "没有标准答案，Harness 怎么知道自己改得好不好？Harness² 用行为对比替代结果打分，把 Harness 自进化从「需要标准答案的实验室」推向真实工作场景。"
 ---
 

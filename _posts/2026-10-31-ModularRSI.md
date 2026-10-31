@@ -1,10 +1,12 @@
 ---
 layout: post
-title: "Harness 自进化：ModularRSI 的模块化拆分"
+title: "Harness 自进化 (03)：ModularRSI 的模块化拆分"
 excerpt: "Harness 自改进的难点不是「要不要改」，而是「改哪个模块」。ModularRSI 把 harness 拆成五块，用成功与失败的轨迹对比定位缺陷，再过三道门才允许合并。"
 ---
 
 ## 问题：改 Harness 不难，难的是改对地方
+这篇解读的是《ModularRSI: Modular and Generalizable Recursive Harness Self-Improvement》（arXiv 2609.14857）。
+
 Harness 自进化已经被证明有效，但现有方法普遍踩三个坑：
 
 1. **拿考试题当练习题**——直接在评测基准上优化，难以区分可复用改进和任务特化适配，换一套任务立刻原形毕露。
