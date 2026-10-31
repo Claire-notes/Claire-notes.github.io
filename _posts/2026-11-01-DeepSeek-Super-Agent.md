@@ -13,7 +13,7 @@ excerpt: "一个人的注意力只能同时跟进三五个 Session，这就是�
 <li><strong>过程中</strong>：Router 侧挂 Watchdog，由观察流触发，Worker 跑偏了才介入。</li>
 <li><strong>全程中</strong>：Router 自己负责隔离与摘要，并把开销压在搜索总延迟的 5–10% 以内。</li>
 </ol>
-<p>和 DeepSeek 一致的点：Router 只派活不干活、先轻后重、摘要回传、自身不能成为性能瓶颈。</p>
+<p>和 DeepSeek 一致的点：<u>Router 只派活不干活、先轻后重、摘要回传、自身不能成为性能瓶颈。</u></p>
 <p>和 DeepSeek 差异的点：在场景——AI 搜要的是快又好，DS 面对的是长任务、大会话和异步批处理（速度有容忍度），产品业务差异带来技术细节差异。</p>
 <p><strong>总结：Router 架构方向是对的，技术趋势判断 / 架构也是对的。</strong></p>
 </div>
