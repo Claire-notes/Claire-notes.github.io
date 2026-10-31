@@ -105,7 +105,7 @@ GRPO 的 seq-mean-token-mean 有个弱点：按样本数平均，样本多的 ro
 ## Citation
 Please cite this work as:
 
-> Claire. "Harnessed Agentic RL: Agent Lightning". Claire-notes (Oct 2026). https://claire-notes.github.io/Agent-Lightning-V1
+> Claire. "Harnessed Agentic RL: Agent Lightning". Claire-notes (Oct 2026). https://claire-notes.github.io/Agent-Lightning
 
 Or use the BibTeX citation:
 
@@ -116,6 +116,6 @@ Or use the BibTeX citation:
   journal = {claire-notes.github.io},
   year = {2026},
   month = {October},
-  url = "https://claire-notes.github.io/Agent-Lightning-V1"
+  url = "https://claire-notes.github.io/Agent-Lightning"
 }
 ```
