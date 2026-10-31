@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Harnessed Agentic RL (03)：Agent Lightning v1.0"
+title: "Harnessed Agentic RL (03)：Agent Lightning"
 excerpt: "Agent 的能力藏在 harness 里，传统 RL 却要求把 Agent 循环重写进训练框架。微软用 3,500 行代码把训练挪到 LLM API 边界上，顺手拆解了重分词、advantage、loss 归一化和调度四个坑。"
 ---
 
@@ -105,17 +105,17 @@ GRPO 的 seq-mean-token-mean 有个弱点：按样本数平均，样本多的 ro
 ## Citation
 Please cite this work as:
 
-> Claire. "Harnessed Agentic RL: Agent Lightning v1.0". Claire-notes (Oct 2026). https://claire-notes.github.io/Agent-Lightning-V1
+> Claire. "Harnessed Agentic RL: Agent Lightning". Claire-notes (Oct 2026). https://claire-notes.github.io/Agent-Lightning
 
 Or use the BibTeX citation:
 
 ```bibtex
 @article{Claire-HarnessAgenticRL-AgentLightning,
-  title = {Harnessed Agentic RL: Agent Lightning v1.0},
+  title = {Harnessed Agentic RL: Agent Lightning},
   author = {Claire (qingYe)},
   journal = {claire-notes.github.io},
   year = {2026},
   month = {October},
-  url = "https://claire-notes.github.io/Agent-Lightning-V1"
+  url = "https://claire-notes.github.io/Agent-Lightning"
 }
 ```
