@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Dora-Agent：17 天，我把一张 6.3 万新币的税单谈成了 0"
-series: dora-agent
+series: ai-product
 date: 2026-11-01
 excerpt: "一张 S$63,094.46 的估税单，三个官方渠道互相踢皮球。我用两个 AI、两套身份认证和一个判例库，把它变成了 0.00。"
 ---

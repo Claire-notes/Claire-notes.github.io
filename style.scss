@@ -340,7 +340,8 @@ nav {
 $series-colors: (
   "harnessed-rl": (#7f95a9, #42576a, #e7edf2),
   "harness-rsi": (#869a80, #4a5e45, #e9efe6),
-  "agent-arch": (#b59487, #745146, #f0e7e2)
+  "agent-arch": (#b59487, #745146, #f0e7e2),
+  "ai-product": (#b3a074, #6b5c37, #f1ebdd)
 );
 
 @each $name, $palette in $series-colors {
