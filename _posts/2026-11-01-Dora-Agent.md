@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Dora-Agent：17 天，我把一张 6.3 万新币的税单谈成了 0"
+title: "Dora-Agent：17天，Agent 把一张 6.3 万新币的税单谈成了 0"
 series: ai-product
 date: 2026-11-01
 excerpt: "一张 S$63,094.46 的估税单，三个官方渠道互相踢皮球。我用两个 AI、两套身份认证和一个判例库，把它变成了 0.00。"
@@ -54,15 +54,33 @@ excerpt: "一张 S$63,094.46 的估税单，三个官方渠道互相踢皮球。
 
 先上 IRAS 官网，找到在线客服的 AI 对话框，问：我这种情况要怎么申诉？
 
-它说：请到「某某」入口提交。
+它说：请用 myTax Portal 里的「Amend Tax Bill」服务。
 
 我去了那个入口。页面上写着：请通过邮件申诉。
 
-我发了邮件。回复写着：请到系统内的「某某」入口提交。
+我发了邮件。自动回复写着：请用 myTax Portal 里的「Amend Tax Bill」服务。
 
-我回到在线对话框，把邮件原话贴给它。它说：请到「某某」入口提交。
+我回到在线对话框，把邮件原话贴给它。它说：请用「Amend Tax Bill」服务。
 
 ——三个渠道，转了一圈，回到原点。
+
+这不是我的转述。原文就在截图里。
+
+<img src="/images/2026-11-01-Dora-Agent/iras-chat-ai.jpg" alt="IRAS 官网 AI 客服对 objection to tax bill 的回答" title="ASK IRAS" width="1078" height="2336" loading="lazy" decoding="async">
+
+*官网 AI 客服的原话。红笔是我划的。*
+
+真正让我后背发凉的是它紧接着的那句，红笔也划了：
+
+> **"You must still pay the tax first, even if you disagree with the assessment."**
+
+翻译过来就是：**就算你不同意，也请先把钱交了。**
+
+而它给的入口，还带着一个时间条件——「within 30 days from the date stated in your Notice of Assessment」。我的 NOA 是 7 月 23 日出的。等我看到这张单子的时候，那个标准自助窗口已经关了一个多月。
+
+所以那几天我面对的不是"流程很难"，而是两件更糟的事：
+
+**一，正当的自助通道已经过期；二，过期之后唯一被允许的动作，是先付钱。**
 
 那两天我最真实的感受不是"办不成"，是**根本找不到门**。
 
@@ -129,6 +147,12 @@ excerpt: "一张 S$63,094.46 的估税单，三个官方渠道互相踢皮球。
 ---
 
 ## 四、邮件里的攻防
+
+在这之前，我收到的邮件都是这样的。
+
+<img src="/images/2026-11-01-Dora-Agent/iras-auto-reply.jpg" alt="IRAS 自动回复，仍然指向 myTax Portal" title="Automated reply" width="928" height="2008" loading="lazy" decoding="async">
+
+*10 月 12 日的自动回复。红笔划的那句，还是把我送回 Portal。*
 
 第二天，IRAS 的邮件来了。
 
