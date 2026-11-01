@@ -337,7 +337,7 @@ nav {
 }
 
 // 标题统一近黑，系列色只做点缀（边框 / 日期 / 标签）
-$titleInk: #1f2733;
+$titleInk: #111827;
 
 .series-tag {
   display: inline-block;
@@ -356,15 +356,17 @@ $titleInk: #1f2733;
 
 // 系列配色：莫兰迪色系（边框 / 文字 / 标签底）
 $series-colors: (
-  "harnessed-rl": (#6f8aa3, #3c5164, #dbe5ee),
-  "harness-rsi": (#758c6d, #41553c, #dfe9da),
-  "agent-arch": (#a58172, #6b483c, #ecdfd8),
-  "ai-product": (#9c8a5e, #5c4e2c, #ece2cd)
+  "harnessed-rl": (#3b82f6, #1d4ed8, #eff6ff, #bfdbfe),
+  "harness-rsi": (#22c55e, #15803d, #f0fdf4, #bbf7d0),
+  "agent-arch": (#f97316, #b45309, #fff7ed, #fed7aa),
+  "ai-product": (#8b5cf6, #6d28d9, #f5f3ff, #ddd6fe)
 );
 
 @each $name, $palette in $series-colors {
   $edge: nth($palette, 1);
   $ink: nth($palette, 2);
+  $tag-bg: nth($palette, 3);
+  $tag-border: nth($palette, 4);
 
   .series-#{$name} {
     border-left-color: $edge;
@@ -400,8 +402,8 @@ $series-colors: (
   }
 
   .series-tag--#{$name} {
-    background: nth($palette, 3);
-    border-color: $edge;
+    background: $tag-bg;
+    border-color: $tag-border;
     color: $ink;
   }
 }
