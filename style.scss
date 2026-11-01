@@ -339,6 +339,20 @@ nav {
 // 标题统一近黑，系列色只做点缀（边框 / 日期 / 标签）
 $titleInk: #1f2733;
 
+.series-tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 0 8px;
+  border: 1px solid $lightGray;
+  border-radius: 999px;
+  background: #f5f5f5;
+  color: $gray;
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: 0.2px;
+  vertical-align: 1px;
+}
+
 // 系列配色：莫兰迪色系（边框 / 文字 / 标签底）
 $series-colors: (
   "harnessed-rl": (#7f95a9, #42576a, #e7edf2),
@@ -391,19 +405,7 @@ $series-colors: (
   }
 }
 
-.series-tag {
-  display: inline-block;
-  margin-left: 8px;
-  padding: 0 8px;
-  border: 1px solid $lightGray;
-  border-radius: 999px;
-  background: #f5f5f5;
-  color: $gray;
-  font-size: 12px;
-  line-height: 1.6;
-  letter-spacing: 0.2px;
-  vertical-align: 1px;
-}
+
 
 // 文内高亮框（作者旁注）
 .callout {

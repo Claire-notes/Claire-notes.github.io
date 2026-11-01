@@ -50,7 +50,7 @@ excerpt: "一张 S$63,094.46 的估税单，三个官方渠道互相踢皮球。
 
 ——转了一圈，回到原点。这不是我的转述，原文就在截图里。
 
-<img src="/images/2026-11-01-Dora-Agent/iras-chat-ai.jpg" alt="IRAS 官网 AI 客服对 objection to tax bill 的回答" title="ASK IRAS" width="560" height="1213" loading="lazy" decoding="async">
+<img src="/images/2026-11-01-Dora-Agent/iras-chat-ai.jpg" alt="IRAS 官网 AI 客服对 objection to tax bill 的回答" title="ASK IRAS" width="380" height="823" loading="lazy" decoding="async">
 
 *官网 AI 客服的原话。红笔是我划的。*
 
@@ -84,7 +84,7 @@ excerpt: "一张 S$63,094.46 的估税单，三个官方渠道互相踢皮球。
 
 接通的那一刻，对面先问：**请问您是哪位？**
 
-我让 AI 直接回答：**我是他的 AI 助理，这通电话是在他本人授权下代他沟通。**
+我的 AI 直接回答：**我是他的 AI 助理，这通电话是在他本人授权下代他沟通。**
 
 对方没有挂断。它接着往下讲，用英文把我的情况组织成一段对面能听懂的话——不是念稿。
 
@@ -106,7 +106,7 @@ excerpt: "一张 S$63,094.46 的估税单，三个官方渠道互相踢皮球。
 
 在这之前，我收到的邮件都是这样的。
 
-<img src="/images/2026-11-01-Dora-Agent/iras-auto-reply.jpg" alt="IRAS 自动回复，仍然指向 myTax Portal" title="Automated reply" width="560" height="1211" loading="lazy" decoding="async">
+<img src="/images/2026-11-01-Dora-Agent/iras-auto-reply.jpg" alt="IRAS 自动回复，仍然指向 myTax Portal" title="Automated reply" width="380" height="821" loading="lazy" decoding="async">
 
 *10 月 12 日的自动回复。红笔划的那句，还是把我送回 Portal。*
 
@@ -136,7 +136,7 @@ Agent 把清单列给我，标上截止时间，逐项确认去哪儿拿、要�
 
 一共提交了**三轮**。每轮交上去，对方都会提出新问题，AI 一条条答，再补新材料。我不记得往返了多少封邮件，但我记得每轮之后，对方的口气都松一点。
 
-<img src="/images/2026-11-01-Dora-Agent/fig3-identity-chain.webp" alt="两道身份门与一条证据链" title="Two identity gates" width="1000" height="600" loading="lazy" decoding="async">
+<img src="/images/2026-11-01-Dora-Agent/fig3-identity-chain.webp" alt="两道身份门与一条证据链" title="Two identity gates" width="1000" height="620" loading="lazy" decoding="async">
 
 *条款说你是什么，不算数；文件说你是什么，才算数。*
 
@@ -181,7 +181,7 @@ Amended Estimated Assessment   −60,289.97
 
 而我坐在旁边，一句话都没说。
 
-<img src="/images/2026-11-01-Dora-Agent/fig2-voice-agent.webp" alt="AI 电话模型的技术逻辑" title="What an AI phone call actually means" width="1000" height="680" loading="lazy" decoding="async">
+<img src="/images/2026-11-01-Dora-Agent/fig2-voice-agent.webp" alt="AI 电话模型的技术逻辑" title="What an AI phone call actually means" width="1000" height="700" loading="lazy" decoding="async">
 
 *它不是"聊天框开了语音"：语料来自我一个人。同一个底座，去年在卖东西，今年在谈税。*
 
