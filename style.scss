@@ -368,8 +368,12 @@ $series-colors: (
   $tag-bg: nth($palette, 3);
   $tag-border: nth($palette, 4);
 
-  .series-#{$name} {
+  .posts > .post.series-#{$name} {
+    border-left-width: 3px;
     border-left-color: $edge;
+  }
+
+  .series-#{$name} {
 
     .post-meta {
       color: $ink;
