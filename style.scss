@@ -336,6 +336,9 @@ nav {
   line-height: 1.75;
 }
 
+// 标题统一近黑，系列色只做点缀（边框 / 日期 / 标签）
+$titleInk: #1f2733;
+
 // 系列配色：莫兰迪色系（边框 / 文字 / 标签底）
 $series-colors: (
   "harnessed-rl": (#7f95a9, #42576a, #e7edf2),
@@ -356,7 +359,11 @@ $series-colors: (
     }
 
     .post-title a {
-      color: $ink;
+      color: $titleInk;
+
+      &:hover {
+        color: $ink;
+      }
     }
   }
 
@@ -365,7 +372,7 @@ $series-colors: (
     border-top-color: $edge;
 
     h1 {
-      color: $ink;
+      color: $titleInk;
     }
 
     .post-meta {
