@@ -241,7 +241,7 @@ Amended Estimated Assessment   −60,289.97
 
 ---
 
-如果你或你的公司也遇到过类似的税务、法律、财务、保险方面的痛点，欢迎聊聊。
+如果你或你的公司也遇到过税务、法律、财务、保险方面类似的痛点，欢迎聊聊。
 
 **Dora-Agent · 产品预约 / 咨询**：[sjsunwhhit2021@gmail.com](mailto:sjsunwhhit2021@gmail.com?subject=Dora-Agent%20%E5%92%A8%E8%AF%A2)
 
