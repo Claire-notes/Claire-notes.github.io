@@ -243,8 +243,8 @@ Amended Estimated Assessment   −60,289.97
 
 ---
 
-如果你也遇到过类似的账单、罚款、或者看不懂的税务通知，欢迎聊聊。
+如果你或你的公司也遇到过类似的税务、法律、财务、保险方面的痛点，欢迎聊聊。
 
-**Dora-Agent · 产品预约 / 咨询**：【入口】
+**Dora-Agent · 产品预约 / 咨询**：[sjsunwhhit2021@gmail.com](mailto:sjsunwhhit2021@gmail.com?subject=Dora-Agent%20%E5%92%A8%E8%AF%A2)
 
 *本文为个人经历记录，不构成税务、法律或投资建议。个案结果不具普遍性。*
