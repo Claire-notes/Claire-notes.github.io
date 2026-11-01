@@ -213,6 +213,10 @@ Amended Estimated Assessment   −60,289.97
 
 *账本不会说谎。三行流水，把一张六万的单子归了零。*
 
+<img src="/images/2026-11-01-Dora-Agent/fig5-flow.gif" alt="Dora-Agent 全流程交互动图" title="One task, nine parties" width="1000" height="720" loading="lazy" decoding="async">
+
+*把 17 天摊开看：谁在什么时候被卷进来。亮色是当前这一步，浅色是已经走过，灰色是还没到。*
+
 ---
 
 ## 七、那通电话背后，是另一个 AI
