@@ -691,6 +691,21 @@ $series-colors: (
   }
 }
 
+.subscribe {
+  margin: 2em 0 0;
+  text-align: center;
+  font-size: 14px;
+
+  a {
+    color: $gray;
+
+    &:hover {
+      color: $blue;
+      text-decoration: none;
+    }
+  }
+}
+
 .post-nav {
   display: flex;
   justify-content: space-between;
