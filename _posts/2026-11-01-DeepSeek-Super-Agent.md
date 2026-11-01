@@ -38,7 +38,7 @@ DeepSeek：Super-agent 设计探索，迈向更自主的 Agent 系统
 
 所以 Super-agent 要做的不是「让 Session 更多」，而是**把 Agent 从单次手动会话中解绑，变成一个跨会话保持上下文、同时推进多项任务且互不干扰的连续实体。**
 
-![Session 中心与 Goal 中心](/images/2026-11-01-DeepSeek-Super-Agent/fig1-session-vs-goal.webp "两种组织方式")
+<img src="/images/2026-11-01-DeepSeek-Super-Agent/fig1-session-vs-goal.webp" alt="Session 中心与 Goal 中心" title="两种组织方式" width="1000" height="480" loading="eager" decoding="async">
 
 *左边：每个渠道一个会话，上下文靠人脑缝合；右边：一个 Agent 下挂多个任务，上下文跟着任务走。*
 
@@ -50,7 +50,7 @@ Super-agent 的设计目标可以概括为四个词：
 - **主动**：持续观察环境事件，主动推进值得处理的事，不需要时保持安静
 - **持久**：始终在线，接入真实工作环境，异常时自动恢复
 
-![四个基础特征](/images/2026-11-01-DeepSeek-Super-Agent/fig5-goals.webp "四个特征")
+<img src="/images/2026-11-01-DeepSeek-Super-Agent/fig5-goals.webp" alt="四个基础特征" title="四个特征" width="1000" height="420" loading="lazy" decoding="async">
 
 *连续、高效、主动、持久——单会话 Agent 一个都给不全。*
 
@@ -74,7 +74,7 @@ Router 负责理解用户意图、管理全局上下文、分派任务、统一�
 
 用户面对的始终是同一个 Agent，底层却能同时推进多个任务。Session 不再是用户需要管理的对象，而是系统内部的实现细节。
 
-![Router + Worker 架构](/images/2026-11-01-DeepSeek-Super-Agent/fig2-router-worker.webp "双层架构")
+<img src="/images/2026-11-01-DeepSeek-Super-Agent/fig2-router-worker.webp" alt="Router + Worker 架构" title="双层架构" width="1000" height="580" loading="lazy" decoding="async">
 
 *Router 只做语义路由与协调，Worker 各自带着独立上下文执行；状态统一落进 Session DB，随用随唤醒。*
 
@@ -92,7 +92,7 @@ Router 负责理解用户意图、管理全局上下文、分派任务、统一�
 
 文章里还有个细节：Super-agent 可以在用户还在讨论方案时，就提前尝试复现和修复问题；没有有效结果就保持安静。这体现了一个原则——**主动不等于打扰。**
 
-![事件两级过滤](/images/2026-11-01-DeepSeek-Super-Agent/fig3-events.webp "事件过滤")
+<img src="/images/2026-11-01-DeepSeek-Super-Agent/fig3-events.webp" alt="事件两级过滤" title="事件过滤" width="1000" height="500" loading="lazy" decoding="async">
 
 *规则层吸收噪音，模型层只处理需要判断的事件；同 Thread 的后续消息走订阅直通，绕开 Router。*
 
@@ -111,7 +111,7 @@ Router 负责理解用户意图、管理全局上下文、分派任务、统一�
 
 比如一个 PR 评论提到「上次那个内存泄漏的问题」，Worker 可以通过引用关系找到之前处理该问题的 Task，再加载相关上下文。这比全文搜索更精准，也更省 token。
 
-![上下文分层与召回](/images/2026-11-01-DeepSeek-Super-Agent/fig4-context.webp "上下文管理")
+<img src="/images/2026-11-01-DeepSeek-Super-Agent/fig4-context.webp" alt="上下文分层与召回" title="上下文管理" width="1000" height="560" loading="lazy" decoding="async">
 
 *Inline 放热数据，Spill 放冷数据；召回沿着引用链走，而不是全库扫描。*
 
@@ -120,13 +120,13 @@ Router 负责理解用户意图、管理全局上下文、分派任务、统一�
 
 **存算分离**：计算、持久化状态、执行环境三者解耦。推理在云端随时扩缩容；所有 Session 状态存在数据库里，不依赖执行环境；代码执行和工具调用可以在用户本地机器，通过轻量 daemon 与云端通信。这样即使本地关机，云端状态仍在，重新接入即可恢复——Agent 变成跨设备的连续实体，而不是绑定在某台机器上的进程。
 
-![计算、状态、执行三层解耦](/images/2026-11-01-DeepSeek-Super-Agent/fig6-storage.webp "存算分离")
+<img src="/images/2026-11-01-DeepSeek-Super-Agent/fig6-storage.webp" alt="计算、状态、执行三层解耦" title="存算分离" width="1000" height="500" loading="lazy" decoding="async">
 
 *云端负责推理，Session 数据库保存状态，本地 daemon 执行工具——关机不丢任务。*
 
 **Watchdog**：独立的守护 Agent，不只监控进程存活，还检查 Worker 有没有陷入死循环、偏离目标，并在异常时尝试恢复。职责包括进度监控、死循环检测、偏离检测、异常恢复。这借鉴了操作系统里「看门狗定时器」的思想：执行单元本身可能出问题，需要一个外部观察者兜底。
 
-![Watchdog 的四项职责](/images/2026-11-01-DeepSeek-Super-Agent/fig7-watchdog.webp "Watchdog")
+<img src="/images/2026-11-01-DeepSeek-Super-Agent/fig7-watchdog.webp" alt="Watchdog 的四项职责" title="Watchdog" width="1000" height="500" loading="lazy" decoding="async">
 
 *进度、死循环、偏离、恢复——监控的是健康度，不只是进程活着。*
 
@@ -143,7 +143,7 @@ Router 负责理解用户意图、管理全局上下文、分派任务、统一�
 - **p50 与 p95 差距小**：12.4 到 15.7 分钟，方差很小，完成时间更稳定
 - **token 更省**：订阅直通让后续事件不必重新加载完整上下文，缓存 token 开销比单 Session 方案低约 27%
 
-![延迟对比（模拟数据）](/images/2026-11-01-DeepSeek-Super-Agent/fig8-latency.webp "延迟")
+<img src="/images/2026-11-01-DeepSeek-Super-Agent/fig8-latency.webp" alt="延迟对比（模拟数据）" title="延迟" width="1000" height="470" loading="lazy" decoding="async">
 
 *p95 从 29.5 分钟降到 15.7 分钟，且 p50 与 p95 差距很小。*
 

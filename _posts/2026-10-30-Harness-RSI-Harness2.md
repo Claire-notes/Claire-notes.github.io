@@ -33,7 +33,7 @@ Harness² 不把 Harness 当成一个整体去改，而是拆成八个可编辑�
 
 背后的直觉是：通用流程和领域知识是两种经验，混在一起改会交叉污染——领域细节被当成通用规则泛化出去，通用经验又被领域特例带偏。
 
-![这是图片](/images/2026-10-30-Harness2/components.webp "Eight Harness Components")
+<img src="/images/2026-10-30-Harness2/components.webp" alt="这是图片" title="Eight Harness Components" width="821" height="294" loading="eager" decoding="async">
 
 ## 方法二：Propose–Probe–Compose，用行为当证据
 两个版本改完之后，怎么决定哪些改动留下？Harness² 不看分数，看**行为对比**。
@@ -50,7 +50,7 @@ Harness² 不把 Harness 当成一个整体去改，而是拆成八个可编辑�
 
 这个对比可以继续加预算：并行递归一次探测多个候选、独立组合；串行递归把上一轮的 Harness 和执行证据带进下一轮。论文里预算 K 从 1 加到 5，两条曲线都单调上升。
 
-![这是图片](/images/2026-10-30-Harness2/harness2_main_new.webp "Harness2 Pipeline")
+<img src="/images/2026-10-30-Harness2/harness2_main_new.webp" alt="这是图片" title="Harness2 Pipeline" width="1014" height="327" loading="lazy" decoding="async">
 
 ## 方法三：经验库让下一个任务少走弯路
 单个任务改完，Harness² 会把这次采用的 Harness 和一份「经验笔记」存进 improvement library。下一个任务**仍然从原始 Harness 出发**——因为为上一个任务量身定做的改动，换个任务可能帮倒忙；但笔记可以传下去，告诉编辑器「什么招在什么情况下管用」。
@@ -78,7 +78,7 @@ WorkBuddy-Bench 上，GLM-5 优化后 **75.7**，已经超过没改过的 Gemini
 3. **提升有一部分来自更强的编辑器**。默认用 Claude Opus 4.8 改 Harness：Opus 改 GLM-5 涨 **11.05** 分，GLM-5 自己改自己只涨 **4.01** 分。不过在 LAB 上，GLM-5 自改反而更好，说明结论依赖领域。
 4. **评价泄露的嫌疑**。JobBench 的评分由 Claude Opus 4.8 完成，而改 Harness 的默认也是它——裁判和教练是同一个模型，方法论上需要更干净的隔离。
 
-![这是图片](/images/2026-10-30-Harness2/same_model.webp "Same Model as Executor and Editor")
+<img src="/images/2026-10-30-Harness2/same_model.webp" alt="这是图片" title="Same Model as Executor and Editor" width="1400" height="401" loading="lazy" decoding="async">
 
 ## 本质：换了一个验证哲学
 把 Harness² 放回 Harness 自进化的脉络里，它的位置很清楚。

@@ -36,14 +36,14 @@ Polar 的 correctness 准则：
 
 结果是：轨迹变长、样本变少，但每个参与训练的 token 都「确实发生过」。这也是 Polar 与「把日志拼一拼」的本质区别。
 
-![这是图片](/images/2026-10-27-Harnessed-Agentic-RL-Polar/traj_build.webp "Trajectory Reconstruction")
+<img src="/images/2026-10-27-Harnessed-Agentic-RL-Polar/traj_build.webp" alt="这是图片" title="Trajectory Reconstruction" width="1400" height="753" loading="eager" decoding="async">
 
 ## 为这条不变量付出的系统代价
 Token 保真不是免费的。它要求代理、运行时、评测都在同一个 session 生命周期里协作，Polar 因此把 rollout 做成服务：Rollout Server 负责把任务展开成多个 session、调度、持久化结果、接收回调；Gateway 负责启动 runtime、运行 Harness、构建轨迹、执行评测、回收资源。
 
 Gateway 内部把生命周期拆成四段 worker pool：INIT（起容器、装依赖）、READY（预热好的 runtime 排队）、RUNNING（执行 Harness）、POSTRUN（重建轨迹、评测、回调、清理）。这样 CPU 密集的环境准备和长尾评测不会堵住 GPU 上的 Agent 执行；session 超时后也仍然进入 POSTRUN，把已经捕获的部分轨迹抢救回来。
 
-![这是图片](/images/2026-10-27-Harnessed-Agentic-RL-Polar/polar_arch.webp "Polar Architecture")
+<img src="/images/2026-10-27-Harnessed-Agentic-RL-Polar/polar_arch.webp" alt="这是图片" title="Polar Architecture" width="1400" height="902" loading="lazy" decoding="async">
 
 训练框架因此可以完全独立：Slime 只需要提交任务、接回调、把 trace 转成 Sample。Polar 不替代 trainer，它只提供「可训练的轨迹」这一层底座。
 
@@ -63,11 +63,11 @@ Gateway 内部把生命周期拆成四段 worker pool：INIT（起容器、装�
 
 效率上，同样三步训练，`prefix_merging` 把 trainer 更新从 1,185 条压到 218 条，耗时从 189.5 分钟降到 35.2 分钟（5.39x），rollout GPU 利用率从 20.4% 提到 87.7%。离线场景也能复用：Qwen3.5-122B-A10B 在 pi harness 上跑 1,638 次，按 SWE-Bench 测试过滤后留下 504 条（30.8%），约 64 GPU-hours。
 
-![GPU 利用率：两种执行模式对比](/images/2026-10-27-Harnessed-Agentic-RL-Polar/prefix_merging_redraw.webp "GPU 利用率")
+<img src="/images/2026-10-27-Harnessed-Agentic-RL-Polar/prefix_merging_redraw.webp" alt="GPU 利用率：两种执行模式对比" title="GPU 利用率" width="1400" height="1080" loading="lazy" decoding="async">
 
 *上：trainer GPU 利用率；下：rollout GPU 利用率。曲线为近似示意。*
 
-![同一工作负载的耗时对比](/images/2026-10-27-Harnessed-Agentic-RL-Polar/prefix_merging_concept.webp "耗时对比")
+<img src="/images/2026-10-27-Harnessed-Agentic-RL-Polar/prefix_merging_concept.webp" alt="同一工作负载的耗时对比" title="耗时对比" width="1400" height="720" loading="lazy" decoding="async">
 
 *同一工作负载，`prefix_merging` 把训练耗时从 189.5 分钟压到 35.2 分钟。*
 

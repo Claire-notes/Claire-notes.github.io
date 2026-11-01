@@ -27,7 +27,7 @@ Lilian Weng 在 2026 年 7 月的长文《Harness Engineering for Self-Improveme
 ## Harness 是运行时，不是 prompt
 Lilian 反复强调：Harness 工程不是 prompt engineering 的升级版，而是 **runtime 和软件系统设计**。Claude Code、Codex、Cursor 之所以强，核心不在于模型多聪明，而在于它们有成熟的文件系统接口、工具调用协议、子 Agent 生命周期管理。
 
-![Harness 是模型外面的一层运行时](/images/2026-10-31-Harness-Self-Improvement/fig1-runtime.webp "Harness 运行时")
+<img src="/images/2026-10-31-Harness-Self-Improvement/fig1-runtime.webp" alt="Harness 是模型外面的一层运行时" title="Harness 运行时" width="903" height="502" loading="eager" decoding="async">
 
 *模型只能看到 harness 喂给它的东西，也只能通过 harness 暴露的接口行动；提示词、工具、上下文、控制流、权限都在这一层。*
 
@@ -53,7 +53,7 @@ Karpathy 的 autoresearch 仓库是个干净的范例：一个「计划、执行
 
 多 Agent 协作的核心，是把上下文复杂度平摊到各个子 Agent：每个子 Agent 有自己的窗口、执行自己的子任务，主 Agent 只负责协调与汇总。配合状态落盘，每个子 Agent 的执行都可追踪，失败也能恢复。Lilian 特别提到 `spawn_agent`、`wait_agent` 这类背景任务原语——说明多 Agent 协作已经从「架构理念」推进到「接口设计」。
 
-![三个设计模式](/images/2026-10-31-Harness-Self-Improvement/fig2-patterns.webp "设计模式")
+<img src="/images/2026-10-31-Harness-Self-Improvement/fig2-patterns.webp" alt="三个设计模式" title="设计模式" width="982" height="455" loading="lazy" decoding="async">
 
 *循环要终止条件，记忆要有 schema，子 Agent 要有生命周期控制——三者都是软件工程问题。*
 
@@ -68,7 +68,7 @@ Lilian 给出一条清晰的优化对象进阶链：
 
 越往上越「元」，最终变成 meta-methodology——不只提升回答质量，而是提升获取答案的机制本身。
 
-![五级台阶](/images/2026-10-31-Harness-Self-Improvement/fig3-levels.webp "五级台阶")
+<img src="/images/2026-10-31-Harness-Self-Improvement/fig3-levels.webp" alt="五级台阶" title="五级台阶" width="925" height="449" loading="lazy" decoding="async">
 
 *层级越高杠杆越大，但归因也越难：改 prompt 可以立刻回滚，改优化器则可能连评估标准一起改掉。*
 
@@ -87,7 +87,7 @@ AHE 则指出瓶颈在可观测性：一次 rollout 失败时，得知道是哪�
 ### 联合优化（SIA / Continual Harness）
 把权重更新与 harness 改进放进同一个闭环，最接近「真正的 RSI」，但目前仍处早期。
 
-![四条路线](/images/2026-10-31-Harness-Self-Improvement/fig4-routes.webp "四条路线")
+<img src="/images/2026-10-31-Harness-Self-Improvement/fig4-routes.webp" alt="四条路线" title="四条路线" width="967" height="462" loading="lazy" decoding="async">
 
 *前三条都假设有自动打分器；第四条才真正涉及权重更新，也最不成熟。*
 

@@ -416,6 +416,53 @@ $series-colors: (
   }
 }
 
+.archive-title {
+  margin: 2em 0 0.8em;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.archive-title:first-child {
+  margin-top: 0;
+}
+
+.archive-count {
+  margin-left: 6px;
+  color: $gray;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.archive-list {
+  margin: 0 0 1em;
+  padding: 0;
+
+  li {
+    display: flex;
+    gap: 12px;
+    padding: 6px 0;
+    border-bottom: 1px solid #f2f2f2;
+    list-style: none;
+    font-size: 15px;
+  }
+
+  a {
+    color: $darkGray;
+
+    &:hover {
+      color: $blue;
+      text-decoration: none;
+    }
+  }
+}
+
+.archive-date {
+  flex: 0 0 88px;
+  color: $gray;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
 .post-single {
   padding: 32px 36px;
   border: 1px solid $lightGray;

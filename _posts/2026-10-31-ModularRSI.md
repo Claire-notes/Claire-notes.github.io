@@ -33,7 +33,7 @@ Siwei Wu 等人的 ModularRSI 要回答的问题很明确：**失败究竟说明
 
 这不是随便切的，而是按「失败时最容易定位到哪个函数」来划分。
 
-![五模块的 harness 架构](/images/2026-10-31-ModularRSI/fig1-modules.webp "五模块拆分")
+<img src="/images/2026-10-31-ModularRSI/fig1-modules.webp" alt="五模块的 harness 架构" title="五模块拆分" width="952" height="495" loading="eager" decoding="async">
 
 *Agent Loop 是外层运行时，其余四块各自负责一类可观测行为；边界清晰，失败才能归因。*
 
@@ -56,7 +56,7 @@ Siwei Wu 等人的 ModularRSI 要回答的问题很明确：**失败究竟说明
 
 通过后冻结函数库，再到**未参与进化**的测试任务上评估。
 
-![对比式信号与三重门控](/images/2026-10-31-ModularRSI/fig2-contrast.webp "对比与门控")
+<img src="/images/2026-10-31-ModularRSI/fig2-contrast.webp" alt="对比式信号与三重门控" title="对比与门控" width="960" height="476" loading="lazy" decoding="async">
 
 *上图：同题的成功与失败轨迹做对比，差异落到具体组件；下图：程序检查、Diff 审查、执行验证三道门。*
 
@@ -74,7 +74,7 @@ Siwei Wu 等人的 ModularRSI 要回答的问题很明确：**失败究竟说明
 
 代价是平均交互步数从 34.70 涨到 35.57：成功率的提升不是免费的，harness 变得更「谨慎」也更复杂。
 
-![TerminalBench 2.0 上的对比](/images/2026-10-31-ModularRSI/fig3-results.webp "主结果")
+<img src="/images/2026-10-31-ModularRSI/fig3-results.webp" alt="TerminalBench 2.0 上的对比" title="主结果" width="931" height="462" loading="lazy" decoding="async">
 
 *同一进化预算下，两种整体进化的策略都没跑过基线，只有模块化版本拿到 +4.9 分。*
 

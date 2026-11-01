@@ -17,7 +17,7 @@ excerpt: "Agent 的能力藏在 harness 里，传统 RL 却要求把 Agent 循�
 
 答案是能，但代价是把 Agent 的执行状态和训练的数学假设对齐——这正是 **Harnessed Agentic RL** 要解决的事。
 
-![Agentic RL 与 Harnessed Agentic RL 的 POMDP 对比](/images/2026-10-31-Agent-Lightning-V1/fig2-pomdp.webp "POMDP 对比")
+<img src="/images/2026-10-31-Agent-Lightning-V1/fig2-pomdp.webp" alt="Agentic RL 与 Harnessed Agentic RL 的 POMDP 对比" title="POMDP 对比" width="1400" height="660" loading="eager" decoding="async">
 
 *传统 Agentic RL 里，环境观测直接回到策略；Harnessed Agentic RL 多了一层 harness（工具、记忆、上下文策略），这层状态对训练器是隐变量。*
 
@@ -34,7 +34,7 @@ excerpt: "Agent 的能力藏在 harness 里，传统 RL 却要求把 Agent 循�
 
 关键设计是**解耦**：执行集群和训练集群分开，可异地部署、独立扩容。训练引擎只负责创建 rollout 和回收轨迹，harness 的上下文策略、工具协议、执行语义原封不动。
 
-![Agent Lightning v1.0 系统架构](/images/2026-10-31-Agent-Lightning-V1/fig1-architecture.webp "系统架构")
+<img src="/images/2026-10-31-Agent-Lightning-V1/fig1-architecture.webp" alt="Agent Lightning v1.0 系统架构" title="系统架构" width="1400" height="790" loading="lazy" decoding="async">
 
 *Agents with Harness 通过 API Gateway 接入训练侧；Rollout Controller 负责调度，Customized Trainer 负责拼样本，推理与训练引擎独立扩缩容。*
 
@@ -46,7 +46,7 @@ harness 用文本维护上下文，RL 要的是精确 token ID。第 i 次调用
 
 论文第一次系统拆解了前缀断裂的三个机制：**聊天模板不可组合、解码再分词漂移、推理期输出变换**。Agent Lightning 的方案是 best-effort 序列合并：只有 token ID 严格满足前缀条件才合并，不满足就关闭当前序列另开一条。**正确性优先，效率靠「能合并多少算多少」。**
 
-![重分词导致 token 前缀断裂](/images/2026-10-31-Agent-Lightning-V1/fig3-retokenization.webp "重分词")
+<img src="/images/2026-10-31-Agent-Lightning-V1/fig3-retokenization.webp" alt="重分词导致 token 前缀断裂" title="重分词" width="1000" height="620" loading="lazy" decoding="async">
 
 *同样的文本，token 边界从 h|aving 变成 hav|ing，第 i 次调用缓存的前缀在第 i+1 次直接作废。*
 
@@ -55,7 +55,7 @@ harness 用文本维护上下文，RL 要的是精确 token ID。第 i 次调用
 
 论文的判断很硬：advantage 必须在 rollout 级计算。现状并不统一——verl Uni-Agent 和 Polar 用 rollout 级，slime 和 AReaL 用样本级，这篇明确站队前者。
 
-![一个 rollout 展开成多个样本](/images/2026-10-31-Agent-Lightning-V1/fig4-rollout-samples.webp "rollout 与样本")
+<img src="/images/2026-10-31-Agent-Lightning-V1/fig4-rollout-samples.webp" alt="一个 rollout 展开成多个样本" title="rollout 与样本" width="1400" height="800" loading="lazy" decoding="async">
 
 *传统设置里一个 rollout 就是一个样本；harnessed 设置里，一个 rollout 会展开成动态数量的样本，并继承同一个 reward。*
 
@@ -69,7 +69,7 @@ GRPO 的 seq-mean-token-mean 有个弱点：按样本数平均，样本多的 ro
 
 论文提出 **Collocated Async RL**：rollout 和权重更新共享同一池 GPU，数据攒够就开更新，Gateway 暂停接收新请求、等存量完成。实测相对同步 RL 拿到约 **2 倍端到端加速**，用的 GPU 总数还更少。
 
-![同步、异步与 collocated async 调度](/images/2026-10-31-Agent-Lightning-V1/fig6-scheduling.webp "调度对比")
+<img src="/images/2026-10-31-Agent-Lightning-V1/fig6-scheduling.webp" alt="同步、异步与 collocated async 调度" title="调度对比" width="1400" height="750" loading="lazy" decoding="async">
 
 *同步 RL 要等最慢的 rollout；异步 RL 能重叠但仍有同步点；collocated async 让 rollout 与更新共享 GPU 池，几乎不空转。*
 
@@ -82,7 +82,7 @@ GRPO 的 seq-mean-token-mean 有个弱点：按样本数平均，样本多的 ro
 
 编码场景尤其值得看：现有框架几乎零支持——没有数据、没有完整训练脚本、还依赖大规模算力。这篇把数据清洗管线和可复现训练脚本完整开源，**只用约 6,000 条训练样本**就拿到 +14.6pp。
 
-![编码 Agent 的 advantage 与归一化消融](/images/2026-10-31-Agent-Lightning-V1/fig9-ablation.webp "消融")
+<img src="/images/2026-10-31-Agent-Lightning-V1/fig9-ablation.webp" alt="编码 Agent 的 advantage 与归一化消融" title="消融" width="1400" height="640" loading="lazy" decoding="async">
 
 *左：验证奖励；右：策略熵。rollout 级 advantage + rollout 级 loss 归一化同时生效时，奖励最高、熵增长最慢。*
 

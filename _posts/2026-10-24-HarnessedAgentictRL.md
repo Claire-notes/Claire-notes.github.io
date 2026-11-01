@@ -26,10 +26,10 @@ excerpt: "Agent = LLM + Harness。这篇拆解 Harness 的构成：它如何决�
 - 这类框架主要有**veRL、Molt、slime、aReal**
 
 ## Pattern1: 🔹 veRL（Seed, 2025）
-![这是图片](/images/2026-10-25-HarnessedAgenticRL/veRL.webp "veRL Framework")
+<img src="/images/2026-10-25-HarnessedAgenticRL/veRL.webp" alt="这是图片" title="veRL Framework" width="1400" height="1034" loading="eager" decoding="async">
 
 ## Pattern2: 🔹 Molt （NVIDIA NeMo，2026.07）
-![这是图片](/images/2026-10-25-HarnessedAgenticRL/molt.webp "Molt Framework")
+<img src="/images/2026-10-25-HarnessedAgenticRL/molt.webp" alt="这是图片" title="Molt Framework" width="1400" height="1035" loading="lazy" decoding="async">
 
 **传统Agent RL的3大问题**  
 - **训练-部署不一致**​​：训练时看到的 prompt 和部署时模型实际看到的 prompt 可能不同
@@ -48,7 +48,7 @@ excerpt: "Agent = LLM + Harness。这篇拆解 Harness 的构成：它如何决�
 - AR框架也在适配转变：verl **Uni-Agent**、AReaL-2.0、slime-v0.3.0。
 
 ## Pattern1: 🔹 Polar （NVIDIA，2026.05）
-![这是图片](/images/2026-10-25-HarnessedAgenticRL/polar.webp "Polar Framework")
+<img src="/images/2026-10-25-HarnessedAgenticRL/polar.webp" alt="这是图片" title="Polar Framework" width="1400" height="797" loading="lazy" decoding="async">
 **是Harnessed Agentic RL的开创工作。**
 - ​​核心设计​​：LLM-endpoint Proxy，记录推理引擎的原始tokenIDs和nodeProb，不做decode-encode。两种方式做轨迹重建：per-request和 **prefix-merging （约5.4倍加速）**。  
 - ​​Rollout架构​​：Rollout Server 负责异步调度，Gateway Node 负责实际执行和工具调用。  
@@ -63,7 +63,7 @@ excerpt: "Agent = LLM + Harness。这篇拆解 Harness 的构成：它如何决�
 Polar 解决了"怎么观察"的问题，但没有处理后续的训练挑战——样本合并、优势计算、损失归一化、后端调度。
 
 ## Pattern2: 🔹 Agent LightningV1.0（微软，2026.08）  
-![这是图片](/images/2026-10-25-HarnessedAgenticRL/agentlightning.webp "Polar Framework")
+<img src="/images/2026-10-25-HarnessedAgenticRL/agentlightning.webp" alt="这是图片" title="Polar Framework" width="1400" height="493" loading="lazy" decoding="async">
 
 **和Polar架构路线一致，框架更轻量级，训练系统优化更详细。**
 - ​​核心设计​​：API Gateway 中的 LLM Proxy 拦截记录请求，但和 Polar 不同，Agent Lightning 在 Gateway 层主要做了统一Chat-template。
@@ -72,7 +72,7 @@ Polar 解决了"怎么观察"的问题，但没有处理后续的训练挑战—
 - ​​效果​​：Qwen3.5-9B，6K 样本，SWE-bench Verified 从 41.8% 提升到 56.4%。
 
 ## Pattern3: 🔹 OpenForgeRL（微软 / 哥伦比亚，2026.07）
-![这是图片](/images/2026-10-25-HarnessedAgenticRL/OpenForge.webp "OpenForge Framework")
+<img src="/images/2026-10-25-HarnessedAgenticRL/OpenForge.webp" alt="这是图片" title="OpenForge Framework" width="1400" height="790" loading="lazy" decoding="async">
 **Trainer、Rollout、Agent结构分离，理论上可以训练任何agent。**
 - 核心设计：API Gateway拦截Harness的LLM调用，路由到RL推理引擎并记录轨迹。
 - Rollout Orchestrator：启动远程沙箱Harness与环境进行交互并调用LLM，ProxyServer拦截LLM调用、路由至推理引擎、记录轨迹。
@@ -84,7 +84,7 @@ Polar 解决了"怎么观察"的问题，但没有处理后续的训练挑战—
 - LLM-Endpoint-Proxy架构基本成型：目前是“观察记录”，后续训练中：Token信号还原、样本动态性缓解、长程轨迹合并、优势计算等挑战，现有方案还不完善。
 
 ## Case Study & 一些实验
-![这是图片](/images/2026-10-25-HarnessedAgenticRL/exp.webp "Exp Result")
+<img src="/images/2026-10-25-HarnessedAgenticRL/exp.webp" alt="这是图片" title="Exp Result" width="1400" height="807" loading="lazy" decoding="async">
 
 ## Future Challenges
 - **Retokenization**：训练引擎拿到的请求-响应对，需拼成连续的训练轨迹。但 harness 和训练引擎的 tokenizer、chat template 可能不一致，导致 token级前缀对不上，导致模型学到的是历史未发生的轨迹。retokenization shift 的三个来源：tokenizer、chat template、inference engine后处理。除chat tempalte可解决，其他问题目前还没有彻底的解决方案。
